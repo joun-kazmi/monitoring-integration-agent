@@ -1,0 +1,987 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>SNMP device · IF-MIB → snmp_exporter config · miagent report</title><style>:root{--bg:#fff;--fg:#14161a;--muted:#5c6470;--line:#e3e6ea;--panel:#f7f8fa;--ok:#0f7b3f;--okbg:#e7f5ec;--bad:#b3261e;--badbg:#fdecea;--warn:#8a5a00;--warnbg:#fff4e0;--code:#0b3a67;--accent:#1c4e80}@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--fg:#e6e8ec;--muted:#9aa3b0;--line:#262b33;--panel:#161a20;--ok:#5ad68d;--okbg:#0e2a1b;--bad:#ff8f84;--badbg:#2c1513;--warn:#f0c26b;--warnbg:#2b2110;--code:#8fc4ff;--accent:#7fb2e8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+code,.mono,pre,td.m,th.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+h1{font-size:19px;margin:0 0 2px;font-weight:650}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+margin:34px 0 10px;font-weight:650}
+.sub{color:var(--muted);font-size:13px}
+.hero{border:1px solid var(--line);border-radius:8px;padding:16px 18px;background:var(--panel)}
+.hero .top{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:12px;
+letter-spacing:.04em}
+.badge.ok{background:var(--okbg);color:var(--ok)} .badge.bad{background:var(--badbg);color:var(--bad)}
+.kpis{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
+.kpi .v{font-size:19px;font-weight:650;font-family:ui-monospace,monospace}
+.kpi .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.note{margin-top:12px;padding:9px 11px;border-left:3px solid var(--accent);
+background:var(--bg);color:var(--muted);font-size:13px;border-radius:0 4px 4px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.m{font-size:12.5px}
+.t-ok{color:var(--ok);font-weight:700} .t-bad{color:var(--bad);font-weight:700}
+.t-warn{color:var(--warn);font-weight:700}
+.pill{display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:650;
+background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+.pill.code{background:var(--okbg);color:var(--ok);border-color:transparent}
+.pill.fast{color:var(--accent)} .pill.standard{color:var(--fg)}
+.pill.strong{background:var(--warnbg);color:var(--warn);border-color:transparent}
+.dim{color:var(--muted)}
+.iter{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.iter h3{margin:0 0 6px;font-size:13px;font-family:ui-monospace,monospace}
+.flist{margin:6px 0 0;padding-left:18px}
+.flist li{margin:1px 0;font-family:ui-monospace,monospace;font-size:12px}
+details{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--panel)}
+summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:13px}
+summary .dim{font-weight:400}
+details pre{margin:0;padding:12px 14px;overflow-x:auto;background:var(--bg);
+border-top:1px solid var(--line);font-size:12px;line-height:1.5;
+border-radius:0 0 7px 7px;max-height:520px;overflow-y:auto}
+footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);
+color:var(--muted);font-size:12px}
+a{color:var(--accent)}
+</style></head><body><div class='wrap'><h1>SNMP device · IF-MIB → snmp_exporter config</h1><div class='sub'>miagent run report · workdir <code>snmp-ifmib</code></div><div class='hero' style='margin-top:14px'><div class='top'><div><span class='badge ok'>PASS</span> <span class='mono'>18/18 expected metrics verified</span></div><div class='dim mono' style='font-size:12px'>http://127.0.0.1:9131/snmp?target=127.0.0.1%3A11161&amp;module=netdev&amp;auth=public_v2</div></div><div class='kpis'><div class='kpi'><div class='v'>0</div><div class='k'>repair iterations</div></div><div class='kpi'><div class='v'>1</div><div class='k'>model calls</div></div><div class='kpi'><div class='v'>8.9K</div><div class='k'>tokens in</div></div><div class='kpi'><div class='v'>3.3K</div><div class='k'>tokens out</div></div><div class='kpi'><div class='v'>1</div><div class='k'>validation runs</div></div><div class='kpi'><div class='v'>36</div><div class='k'>series scraped</div></div></div><div class='note'>Every validation run above cost <strong>0 tokens</strong>: correctness is decided by scraping the artifact and diffing against the IR, never by a model. Models are used only to read docs, generate the artifact, and repair it.</div></div><h2>Pipeline</h2><div class='scroll'><table><tr><th>Stage</th><th>Executed by</th><th>Model</th><th>Cost</th></tr><tr><td>Parse MIB</td><td><span class='pill code'>deterministic code</span></td><td class='m'>—</td><td class='m dim'></td></tr><tr><td>Compile artifacts</td><td><span class='pill code'>deterministic code</span></td><td class='m'>—</td><td class='m dim'></td></tr><tr><td>Run + validate</td><td><span class='pill code'>deterministic code</span></td><td class='m'>—</td><td class='m dim'>1 run(s), 0 tokens</td></tr></table></div><div class='note'>Per-stage attribution was added after this run; only totals are available here.</div><h2>Validation diff · expected (IR) vs observed (scrape)</h2><div class='scroll'><table><tr><th></th><th>Metric</th><th>Type</th><th>Observed</th><th>Series</th><th>Sample</th><th>Labels</th><th>Note</th></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_bytes_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>8,902</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_bytes_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>27,116</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_unicast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>1,356</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_unicast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>15,644</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_multicast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>1,818</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_multicast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>3,617</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_broadcast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>2,220</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_broadcast_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>4,033</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_errors_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>22</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_errors_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>21</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_discards_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>20</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_discards_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>22</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_receive_unknown_protocol_packets_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>2</td><td class='m dim'>17</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_transmit_queue_length_packets</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>2</td><td class='m dim'>515,891,312</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_speed_mbps</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>2</td><td class='m dim'>10</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_oper_status</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>2</td><td class='m dim'>1</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_admin_status</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>2</td><td class='m dim'>1</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>network_interface_last_change_seconds</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>2</td><td class='m dim'>1.24e+06</td><td class='m dim'>ifIndex, interface</td><td class='dim'></td></tr></table></div><h2>Cost ledger</h2><div class='scroll'><table><tr><th>Model</th><th>Calls</th><th>Tokens in</th><th>Tokens out</th></tr><tr><td class='m'>sonnet</td><td class='m'>1</td><td class='m'>8.9K</td><td class='m'>3.3K</td></tr><tr><td class='m'><strong>total</strong></td><td class='m'><strong>1</strong></td><td class='m'><strong>8.9K</strong></td><td class='m'><strong>3.3K</strong></td></tr><tr><td class='m'>validation (1 run(s))</td><td class='m t-ok'>0</td><td class='m t-ok'>0</td><td class='m t-ok'>0</td></tr></table></div><h2>Artifacts</h2><details><summary>snmp.yml <span class='dim'>— Compiled snmp_exporter config · 278 lines</span></summary><pre>auths:
+  public_v2:
+    community: public
+    security_level: noAuthNoPriv
+    auth_protocol: MD5
+    priv_protocol: DES
+    version: 2
+modules:
+  netdev:
+    walk:
+    - 1.3.6.1.2.1.2.2.1.7
+    - 1.3.6.1.2.1.2.2.1.8
+    - 1.3.6.1.2.1.2.2.1.9
+    - 1.3.6.1.2.1.2.2.1.13
+    - 1.3.6.1.2.1.2.2.1.14
+    - 1.3.6.1.2.1.2.2.1.15
+    - 1.3.6.1.2.1.2.2.1.19
+    - 1.3.6.1.2.1.2.2.1.20
+    - 1.3.6.1.2.1.2.2.1.21
+    - 1.3.6.1.2.1.31.1.1.1.1
+    - 1.3.6.1.2.1.31.1.1.1.6
+    - 1.3.6.1.2.1.31.1.1.1.7
+    - 1.3.6.1.2.1.31.1.1.1.8
+    - 1.3.6.1.2.1.31.1.1.1.9
+    - 1.3.6.1.2.1.31.1.1.1.10
+    - 1.3.6.1.2.1.31.1.1.1.11
+    - 1.3.6.1.2.1.31.1.1.1.12
+    - 1.3.6.1.2.1.31.1.1.1.13
+    - 1.3.6.1.2.1.31.1.1.1.15
+    metrics:
+    - name: network_interface_receive_bytes_total
+      oid: 1.3.6.1.2.1.31.1.1.1.6
+      type: counter
+      help: Total octets received on the interface (64-bit counter). - ifHCInOctets (1.3.6.1.2.1.31.1.1.1.6)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_bytes_total
+      oid: 1.3.6.1.2.1.31.1.1.1.10
+      type: counter
+      help: Total octets transmitted out of the interface (64-bit counter). - ifHCOutOctets (1.3.6.1.2.1.31.1.1.1.10)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_unicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.7
+      type: counter
+      help: Unicast packets delivered to a higher layer (64-bit counter). - ifHCInUcastPkts (1.3.6.1.2.1.31.1.1.1.7)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_unicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.11
+      type: counter
+      help: Unicast packets requested for transmission (64-bit counter). - ifHCOutUcastPkts (1.3.6.1.2.1.31.1.1.1.11)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_multicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.8
+      type: counter
+      help: Multicast packets delivered to a higher layer (64-bit counter). - ifHCInMulticastPkts (1.3.6.1.2.1.31.1.1.1.8)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_multicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.12
+      type: counter
+      help: Multicast packets requested for transmission (64-bit counter). - ifHCOutMulticastPkts (1.3.6.1.2.1.31.1.1.1.12)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_broadcast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.9
+      type: counter
+      help: Broadcast packets delivered to a higher layer (64-bit counter). - ifHCInBroadcastPkts (1.3.6.1.2.1.31.1.1.1.9)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_broadcast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.13
+      type: counter
+      help: Broadcast packets requested for transmission (64-bit counter). - ifHCOutBroadcastPkts (1.3.6.1.2.1.31.1.1.1.13)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_errors_total
+      oid: 1.3.6.1.2.1.2.2.1.14
+      type: counter
+      help: Inbound packets that contained errors preventing delivery to a higher layer. - ifInErrors (1.3.6.1.2.1.2.2.1.14)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_errors_total
+      oid: 1.3.6.1.2.1.2.2.1.20
+      type: counter
+      help: Outbound packets that could not be transmitted because of errors. - ifOutErrors (1.3.6.1.2.1.2.2.1.20)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_discards_total
+      oid: 1.3.6.1.2.1.2.2.1.13
+      type: counter
+      help: Inbound packets discarded even though no errors were detected. - ifInDiscards (1.3.6.1.2.1.2.2.1.13)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_discards_total
+      oid: 1.3.6.1.2.1.2.2.1.19
+      type: counter
+      help: Outbound packets discarded even though no errors were detected. - ifOutDiscards (1.3.6.1.2.1.2.2.1.19)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_unknown_protocol_packets_total
+      oid: 1.3.6.1.2.1.2.2.1.15
+      type: counter
+      help: Inbound packets discarded because of an unknown or unsupported protocol. - ifInUnknownProtos (1.3.6.1.2.1.2.2.1.15)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_queue_length_packets
+      oid: 1.3.6.1.2.1.2.2.1.21
+      type: gauge
+      help: Length of the output packet queue. - ifOutQLen (1.3.6.1.2.1.2.2.1.21)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_speed_mbps
+      oid: 1.3.6.1.2.1.31.1.1.1.15
+      type: gauge
+      help: Estimate of the interface&#x27;s current bandwidth in Mbit/s. - ifHighSpeed (1.3.6.1.2.1.31.1.1.1.15)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_oper_status
+      oid: 1.3.6.1.2.1.2.2.1.8
+      type: gauge
+      help: Current operational state of the interface (1=up,2=down,3=testing,4=unknown,5=dormant,6=notPresent,7=lowerLayerDown). - ifOperStatus (1.3.6.1.2.1.2.2.1.8)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+      enum_values:
+        1: up
+        2: down
+        3: testing
+        4: unknown
+        5: dormant
+        6: notPresent
+        7: lowerLayerDown
+    - name: network_interface_admin_status
+      oid: 1.3.6.1.2.1.2.2.1.7
+      type: gauge
+      help: Desired administrative state of the interface (1=up,2=down,3=testing). - ifAdminStatus (1.3.6.1.2.1.2.2.1.7)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+      enum_values:
+        1: up
+        2: down
+        3: testing
+    - name: network_interface_last_change_seconds
+      oid: 1.3.6.1.2.1.2.2.1.9
+      type: gauge
+      help: sysUpTime value at the time the interface entered its current operational state. - ifLastChange (1.3.6.1.2.1.2.2.1.9)
+      scale: 0.01
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+</pre></details><details><summary>generator.yml <span class='dim'>— generator.yml (human-maintained source) · 74 lines</span></summary><pre># snmp_exporter generator config, produced by migen.
+# MIB modules required: IF-MIB
+# Run: generator generate -m &lt;mib-dir&gt; -g generator.yml -o snmp.yml
+# NOTE: `rename_to` under overrides is a migen annotation recording the
+# intended Prometheus metric name; the upstream generator ignores it.
+auths:
+  public_v2:
+    community: public
+    version: 2
+modules:
+  netdev:
+    walk:
+    - ifAdminStatus
+    - ifHCInBroadcastPkts
+    - ifHCInMulticastPkts
+    - ifHCInOctets
+    - ifHCInUcastPkts
+    - ifHCOutBroadcastPkts
+    - ifHCOutMulticastPkts
+    - ifHCOutOctets
+    - ifHCOutUcastPkts
+    - ifHighSpeed
+    - ifInDiscards
+    - ifInErrors
+    - ifInUnknownProtos
+    - ifLastChange
+    - ifName
+    - ifOperStatus
+    - ifOutDiscards
+    - ifOutErrors
+    - ifOutQLen
+    lookups:
+    - source_indexes:
+      - ifIndex
+      lookup: ifName
+      drop_source_indexes: false
+    overrides:
+      ifHCInOctets:
+        rename_to: network_interface_receive_bytes_total
+      ifHCOutOctets:
+        rename_to: network_interface_transmit_bytes_total
+      ifHCInUcastPkts:
+        rename_to: network_interface_receive_unicast_packets_total
+      ifHCOutUcastPkts:
+        rename_to: network_interface_transmit_unicast_packets_total
+      ifHCInMulticastPkts:
+        rename_to: network_interface_receive_multicast_packets_total
+      ifHCOutMulticastPkts:
+        rename_to: network_interface_transmit_multicast_packets_total
+      ifHCInBroadcastPkts:
+        rename_to: network_interface_receive_broadcast_packets_total
+      ifHCOutBroadcastPkts:
+        rename_to: network_interface_transmit_broadcast_packets_total
+      ifInErrors:
+        rename_to: network_interface_receive_errors_total
+      ifOutErrors:
+        rename_to: network_interface_transmit_errors_total
+      ifInDiscards:
+        rename_to: network_interface_receive_discards_total
+      ifOutDiscards:
+        rename_to: network_interface_transmit_discards_total
+      ifInUnknownProtos:
+        rename_to: network_interface_receive_unknown_protocol_packets_total
+      ifOutQLen:
+        rename_to: network_interface_transmit_queue_length_packets
+      ifHighSpeed:
+        rename_to: network_interface_speed_mbps
+      ifOperStatus:
+        rename_to: network_interface_oper_status
+      ifAdminStatus:
+        rename_to: network_interface_admin_status
+      ifLastChange:
+        rename_to: network_interface_last_change_seconds
+</pre></details><details><summary>spec.json <span class='dim'>— Metric IR (validation contract) · 485 lines</span></summary><pre>{
+  &quot;service&quot;: &quot;netdev&quot;,
+  &quot;kind&quot;: &quot;snmp_generator&quot;,
+  &quot;endpoints&quot;: [
+    {
+      &quot;url&quot;: &quot;snmp://target&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;none&quot;,
+      &quot;auth_detail&quot;: &quot;&quot;,
+      &quot;response_format&quot;: &quot;snmp&quot;,
+      &quot;notes&quot;: &quot;snmp_exporter module=netdev, auth=public_v2&quot;
+    }
+  ],
+  &quot;metrics&quot;: [
+    {
+      &quot;name&quot;: &quot;network_interface_receive_bytes_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total octets received on the interface (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCInOctets oid=1.3.6.1.2.1.31.1.1.1.6 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_bytes_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total octets transmitted out of the interface (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCOutOctets oid=1.3.6.1.2.1.31.1.1.1.10 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_unicast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Unicast packets delivered to a higher layer (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCInUcastPkts oid=1.3.6.1.2.1.31.1.1.1.7 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_unicast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Unicast packets requested for transmission (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCOutUcastPkts oid=1.3.6.1.2.1.31.1.1.1.11 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_multicast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Multicast packets delivered to a higher layer (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCInMulticastPkts oid=1.3.6.1.2.1.31.1.1.1.8 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_multicast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Multicast packets requested for transmission (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCOutMulticastPkts oid=1.3.6.1.2.1.31.1.1.1.12 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_broadcast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Broadcast packets delivered to a higher layer (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCInBroadcastPkts oid=1.3.6.1.2.1.31.1.1.1.9 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_broadcast_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Broadcast packets requested for transmission (64-bit counter).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHCOutBroadcastPkts oid=1.3.6.1.2.1.31.1.1.1.13 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_errors_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Inbound packets that contained errors preventing delivery to a higher layer.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifInErrors oid=1.3.6.1.2.1.2.2.1.14 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_errors_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Outbound packets that could not be transmitted because of errors.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifOutErrors oid=1.3.6.1.2.1.2.2.1.20 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_discards_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Inbound packets discarded even though no errors were detected.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifInDiscards oid=1.3.6.1.2.1.2.2.1.13 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_discards_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Outbound packets discarded even though no errors were detected.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifOutDiscards oid=1.3.6.1.2.1.2.2.1.19 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_receive_unknown_protocol_packets_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Inbound packets discarded because of an unknown or unsupported protocol.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifInUnknownProtos oid=1.3.6.1.2.1.2.2.1.15 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_transmit_queue_length_packets&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Length of the output packet queue.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: null,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifOutQLen oid=1.3.6.1.2.1.2.2.1.21 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_speed_mbps&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Estimate of the interface&#x27;s current bandwidth in Mbit/s.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: null,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifHighSpeed oid=1.3.6.1.2.1.31.1.1.1.15 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_oper_status&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current operational state of the interface (1=up,2=down,3=testing,4=unknown,5=dormant,6=notPresent,7=lowerLayerDown).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: null,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifOperStatus oid=1.3.6.1.2.1.2.2.1.8 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_admin_status&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Desired administrative state of the interface (1=up,2=down,3=testing).&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: null,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifAdminStatus oid=1.3.6.1.2.1.2.2.1.7 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;network_interface_last_change_seconds&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;sysUpTime value at the time the interface entered its current operational state.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;ifIndex&quot;,
+          &quot;description&quot;: &quot;table index ifIndex&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;interface&quot;,
+          &quot;description&quot;: &quot;lookup from ifName&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: null,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;SNMP ifLastChange oid=1.3.6.1.2.1.2.2.1.9 module=IF-MIB&quot;,
+      &quot;required&quot;: true
+    }
+  ],
+  &quot;notes&quot;: &quot;Focused on ifXTable 64-bit HC counters for throughput to avoid 32-bit wraparound, plus ifTable error/discard counters (no HC equivalents exist) and link-state/saturation gauges. Skipped ifRcvAddressTable, ifStackTable, and ifTestTable as administrative/control tables, and skipped rarely-changing scalars (ifNumber, ifTableLastChange, ifStackLastChange). A single ifIndex-&gt;ifName lookup covers all ifIndex-keyed metrics since ifTable and ifXTable share the same index.&quot;
+}</pre></details><details><summary>selection.json <span class='dim'>— SNMP selection (the one model-produced artifact) · 105 lines</span></summary><pre>{
+  &quot;module_name&quot;: &quot;netdev&quot;,
+  &quot;metrics&quot;: [
+    {
+      &quot;mib_object&quot;: &quot;ifHCInOctets&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_bytes_total&quot;,
+      &quot;help&quot;: &quot;Total octets received on the interface (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCOutOctets&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_bytes_total&quot;,
+      &quot;help&quot;: &quot;Total octets transmitted out of the interface (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCInUcastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_unicast_packets_total&quot;,
+      &quot;help&quot;: &quot;Unicast packets delivered to a higher layer (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCOutUcastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_unicast_packets_total&quot;,
+      &quot;help&quot;: &quot;Unicast packets requested for transmission (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCInMulticastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_multicast_packets_total&quot;,
+      &quot;help&quot;: &quot;Multicast packets delivered to a higher layer (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCOutMulticastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_multicast_packets_total&quot;,
+      &quot;help&quot;: &quot;Multicast packets requested for transmission (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCInBroadcastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_broadcast_packets_total&quot;,
+      &quot;help&quot;: &quot;Broadcast packets delivered to a higher layer (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHCOutBroadcastPkts&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_broadcast_packets_total&quot;,
+      &quot;help&quot;: &quot;Broadcast packets requested for transmission (64-bit counter).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifInErrors&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_errors_total&quot;,
+      &quot;help&quot;: &quot;Inbound packets that contained errors preventing delivery to a higher layer.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifOutErrors&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_errors_total&quot;,
+      &quot;help&quot;: &quot;Outbound packets that could not be transmitted because of errors.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifInDiscards&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_discards_total&quot;,
+      &quot;help&quot;: &quot;Inbound packets discarded even though no errors were detected.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifOutDiscards&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_discards_total&quot;,
+      &quot;help&quot;: &quot;Outbound packets discarded even though no errors were detected.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifInUnknownProtos&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_receive_unknown_protocol_packets_total&quot;,
+      &quot;help&quot;: &quot;Inbound packets discarded because of an unknown or unsupported protocol.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifOutQLen&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_transmit_queue_length_packets&quot;,
+      &quot;help&quot;: &quot;Length of the output packet queue.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifHighSpeed&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_speed_mbps&quot;,
+      &quot;help&quot;: &quot;Estimate of the interface&#x27;s current bandwidth in Mbit/s.&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifOperStatus&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_oper_status&quot;,
+      &quot;help&quot;: &quot;Current operational state of the interface (1=up,2=down,3=testing,4=unknown,5=dormant,6=notPresent,7=lowerLayerDown).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifAdminStatus&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_admin_status&quot;,
+      &quot;help&quot;: &quot;Desired administrative state of the interface (1=up,2=down,3=testing).&quot;
+    },
+    {
+      &quot;mib_object&quot;: &quot;ifLastChange&quot;,
+      &quot;metric_name&quot;: &quot;network_interface_last_change_seconds&quot;,
+      &quot;help&quot;: &quot;sysUpTime value at the time the interface entered its current operational state.&quot;
+    }
+  ],
+  &quot;lookups&quot;: [
+    {
+      &quot;index_labels&quot;: [
+        &quot;ifIndex&quot;
+      ],
+      &quot;source_object&quot;: &quot;ifName&quot;,
+      &quot;label_name&quot;: &quot;interface&quot;
+    }
+  ],
+  &quot;notes&quot;: &quot;Focused on ifXTable 64-bit HC counters for throughput to avoid 32-bit wraparound, plus ifTable error/discard counters (no HC equivalents exist) and link-state/saturation gauges. Skipped ifRcvAddressTable, ifStackTable, and ifTestTable as administrative/control tables, and skipped rarely-changing scalars (ifNumber, ifTableLastChange, ifStackLastChange). A single ifIndex-&gt;ifName lookup covers all ifIndex-keyed metrics since ifTable and ifXTable share the same index.&quot;
+}</pre></details><footer>Generated by <code>miagent report</code> from artifacts on disk — no model calls involved. Validation outcomes are reproducible by re-running <code>miagent validate</code> against the same target.</footer></div></body></html>

@@ -1,0 +1,265 @@
+{
+  "endpoints": [
+    {
+      "url": "/api/overview",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "HTTP Basic authentication; default user guest / password guest (localhost only)",
+      "response_format": "json",
+      "notes": "System-wide overview: message stats, queue totals, object totals."
+    },
+    {
+      "url": "/api/queues",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "HTTP Basic authentication; default user guest / password guest (localhost only)",
+      "response_format": "json",
+      "notes": "JSON array of all queues across all vhosts; one element per queue."
+    },
+    {
+      "url": "/api/nodes",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "HTTP Basic authentication; default user guest / password guest (localhost only)",
+      "response_format": "json",
+      "notes": "JSON array of cluster nodes; one element per node."
+    }
+  ],
+  "fields": [
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "message_stats.publish",
+      "description": "Count of messages published (cumulative)",
+      "suggested_kind": "counter",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "message_stats.deliver_get",
+      "description": "Messages delivered to consumers in acknowledgement mode plus basic.get (cumulative)",
+      "suggested_kind": "counter",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "message_stats.ack",
+      "description": "Count of messages acknowledged (cumulative)",
+      "suggested_kind": "counter",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "message_stats.confirm",
+      "description": "Count of messages confirmed (cumulative)",
+      "suggested_kind": "counter",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "queue_totals.messages",
+      "description": "Total messages in all queues",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "queue_totals.messages_ready",
+      "description": "Messages ready for delivery across all queues",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "queue_totals.messages_unacknowledged",
+      "description": "Messages delivered but not yet acknowledged across all queues",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "object_totals.connections",
+      "description": "Current number of connections",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "object_totals.channels",
+      "description": "Current number of channels",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "object_totals.exchanges",
+      "description": "Current number of exchanges",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "object_totals.queues",
+      "description": "Current number of queues",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/overview",
+      "json_path": "object_totals.consumers",
+      "description": "Current number of consumers",
+      "suggested_kind": "gauge",
+      "labels_from": []
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "messages",
+      "description": "Total message count in the queue",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "messages_ready",
+      "description": "Messages ready for delivery in the queue",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "messages_unacknowledged",
+      "description": "Messages delivered to consumers, awaiting acknowledgement",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "consumers",
+      "description": "Number of consumers on the queue",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "memory",
+      "description": "Bytes of memory used by the queue process",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/queues",
+      "json_path": "message_stats.publish",
+      "description": "Messages published to this queue (cumulative)",
+      "suggested_kind": "counter",
+      "labels_from": [
+        "name",
+        "vhost"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "mem_used",
+      "description": "Memory used by the node, in bytes",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "fd_used",
+      "description": "File descriptors in use",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "fd_total",
+      "description": "File descriptor limit",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "sockets_used",
+      "description": "Sockets in use",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "sockets_total",
+      "description": "Socket limit",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "proc_used",
+      "description": "Erlang processes in use",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "proc_total",
+      "description": "Erlang process limit",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "uptime",
+      "description": "Milliseconds since node start",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "disk_free",
+      "description": "Free disk space, in bytes",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    },
+    {
+      "endpoint_url": "/api/nodes",
+      "json_path": "running",
+      "description": "Whether the node is running (boolean; map to 0/1 if used as a metric)",
+      "suggested_kind": "gauge",
+      "labels_from": [
+        "name"
+      ]
+    }
+  ],
+  "notes": "All endpoints use HTTP Basic auth on port 15672. /api/queues and /api/nodes return arrays, so each element yields a series labelled by name (and vhost for queues). message_stats may be absent on objects with no activity yet. The docs do not state whether uptime is a counter; it is treated as a gauge (milliseconds). 'running' is boolean rather than numeric and needs conversion. The string fields (rabbitmq_version, erlang_version, node, state) are not numeric metrics; they could serve as info-style labels."
+}

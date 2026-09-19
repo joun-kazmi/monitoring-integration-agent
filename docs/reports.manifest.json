@@ -1,0 +1,36 @@
+{
+  "output_dir": "reports",
+  "repo_url": "https://github.com/joun-kazmi/monitoring-integration-agent",
+  "reports": [
+    {
+      "workdir": "../examples/runs/rabbitmq-full",
+      "file": "rabbitmq.html",
+      "title": "RabbitMQ \u00b7 REST docs \u2192 Python exporter",
+      "blurb": "The full pipeline on a clean run: docs normalized by code, metric surface and IR designed on the standard tier, exporter code generated on the strong tier, then verified by execution. Shows where each token was spent."
+    },
+    {
+      "workdir": "../examples/runs/rabbitmq",
+      "file": "rabbitmq-self-repair.html",
+      "title": "RabbitMQ \u00b7 recovering from an upstream API change",
+      "blurb": "The upstream API was changed underneath a working integration (a renamed field and a newly-nested one). Validation caught it, and repair fixed the exporter in one iteration using fresh endpoint samples as ground truth."
+    },
+    {
+      "workdir": "../examples/runs/snmp-ifmib",
+      "file": "snmp-ifmib.html",
+      "title": "SNMP device \u00b7 IF-MIB \u2192 snmp_exporter config",
+      "blurb": "One model call total: the MIB is parsed deterministically, the model only chooses what to monitor and how to name it, and snmp.yml plus the validation contract are compiled from that same selection so they cannot drift."
+    },
+    {
+      "workdir": "../examples/runs/snmp-oldswitch2",
+      "file": "snmp-legacy-switch.html",
+      "title": "Legacy switch \u00b7 SNMP selection self-repair",
+      "blurb": "A device with no ifXTable, so the 64-bit counters the model preferred do not exist. Repair walked the device, saw which OIDs actually respond, and substituted the 32-bit equivalents rather than dropping throughput coverage."
+    },
+    {
+      "workdir": "../examples/runs/rabbitmq-url",
+      "file": "rabbitmq-from-url.html",
+      "title": "RabbitMQ \u00b7 documentation ingested over HTTP",
+      "blurb": "Same pipeline, but the documentation was fetched from a URL and normalized before extraction \u2014 the path used for OpenAPI specs and HTML API references."
+    }
+  ]
+}

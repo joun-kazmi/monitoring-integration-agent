@@ -1,0 +1,60 @@
+{
+  "module_name": "if_mib",
+  "metrics": [
+    {
+      "mib_object": "ifNumber",
+      "metric_name": "network_interface_count",
+      "help": "Number of network interfaces present on the system."
+    },
+    {
+      "mib_object": "ifAdminStatus",
+      "metric_name": "network_interface_admin_status",
+      "help": "Desired interface state (1=up, 2=down, 3=testing)."
+    },
+    {
+      "mib_object": "ifOperStatus",
+      "metric_name": "network_interface_oper_status",
+      "help": "Current operational state (1=up, 2=down, 3=testing, 4=unknown, 5=dormant, 6=notPresent, 7=lowerLayerDown)."
+    },
+    {
+      "mib_object": "ifLastChange",
+      "metric_name": "network_interface_last_change_timeticks",
+      "help": "sysUpTime value (in timeticks) when the interface entered its current operational state."
+    },
+    {
+      "mib_object": "ifSpeed",
+      "metric_name": "network_interface_speed_bits",
+      "help": "Estimate of the interface's current bandwidth in bits per second (32-bit ifTable object; ifHighSpeed is not implemented on this device)."
+    },
+    {
+      "mib_object": "ifInOctets",
+      "metric_name": "network_interface_receive_bytes_total",
+      "help": "Total octets received on the interface (32-bit counter; ifHCInOctets is not implemented on this device)."
+    },
+    {
+      "mib_object": "ifOutOctets",
+      "metric_name": "network_interface_transmit_bytes_total",
+      "help": "Total octets transmitted out of the interface (32-bit counter; ifHCOutOctets is not implemented on this device)."
+    },
+    {
+      "mib_object": "ifInErrors",
+      "metric_name": "network_interface_receive_errors_total",
+      "help": "Inbound packets that contained errors preventing delivery to a higher layer."
+    },
+    {
+      "mib_object": "ifOutErrors",
+      "metric_name": "network_interface_transmit_errors_total",
+      "help": "Outbound packets that could not be transmitted because of errors."
+    }
+  ],
+  "lookups": [
+    {
+      "index_labels": [
+        "ifIndex"
+      ],
+      "source_object": "ifDescr",
+      "label_name": "interface"
+    }
+  ],
+  "notes": "Device implements only ifNumber and a subset of ifTable; ifXTable (1.3.6.1.2.1.31.1.1) returned nothing, so all ifHC* counters and ifHighSpeed were replaced by 32-bit equivalents where present (ifInOctets, ifOutOctets, ifSpeed). ifSpeed is reported in bits per second, so the metric is named _bits rather than _megabits. Dropped with no working equivalent in the walk: unicast/multicast/broadcast packet counters (ifInUcastPkts, ifOutUcastPkts, ifHC*), ifInDiscards, ifOutDiscards, ifInUnknownProtos, ifOutQLen. Counters are 32-bit and may wrap on fast links; at 100 Mbps this is acceptable with rate() at typical scrape intervals. Lookup remains ifIndex -> ifDescr, which returned values."
+}

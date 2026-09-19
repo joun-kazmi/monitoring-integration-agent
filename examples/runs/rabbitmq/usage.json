@@ -1,0 +1,12 @@
+{
+  "calls": 1,
+  "input_tokens": 13749,
+  "output_tokens": 6009,
+  "by_model": {
+    "sonnet": {
+      "calls": 1,
+      "input_tokens": 13749,
+      "output_tokens": 6009
+    }
+  }
+}

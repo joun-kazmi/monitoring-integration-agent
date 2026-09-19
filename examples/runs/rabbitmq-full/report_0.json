@@ -1,0 +1,424 @@
+{
+  "ok": true,
+  "failures": [],
+  "warnings": [],
+  "metrics_expected": 28,
+  "metrics_found": 28,
+  "unexpected_metrics": [],
+  "scrape_url": "http://127.0.0.1:9471/metrics",
+  "promtool_ran": false,
+  "metrics": [
+    {
+      "name": "rabbitmq_messages_published_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 118681.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": false,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages_delivered_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 114346.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": false,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages_acknowledged_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 114326.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": false,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages_confirmed_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 118636.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": false,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 335.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages_ready",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 320.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_messages_unacknowledged",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 15.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_connections",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 4.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_channels",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 8.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_exchanges",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 12.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queues",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 3.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_consumers",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 5.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_messages",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 120.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_messages_ready",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 118.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_messages_unacknowledged",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 2.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_consumers",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 2.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_memory_bytes",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 187312.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_queue_messages_published_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 3,
+      "sample_value": 59340.0,
+      "expected_labels": [
+        "queue",
+        "vhost"
+      ],
+      "observed_labels": [
+        "queue",
+        "vhost"
+      ],
+      "required": false,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_memory_used_bytes",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 142606336.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_fd_used",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 42.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_fd_total",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 1048576.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_sockets_used",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 6.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_sockets_total",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 943626.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_processes_used",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 512.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_processes_total",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 1048576.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_uptime_milliseconds",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 326726.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_disk_free_bytes",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 53687091200.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "rabbitmq_node_running",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 1.0,
+      "expected_labels": [
+        "node"
+      ],
+      "observed_labels": [
+        "node"
+      ],
+      "required": true,
+      "detail": ""
+    }
+  ]
+}

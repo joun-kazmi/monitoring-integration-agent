@@ -1,0 +1,168 @@
+{
+  "ok": true,
+  "failures": [],
+  "warnings": [],
+  "metrics_expected": 9,
+  "metrics_found": 9,
+  "unexpected_metrics": [],
+  "scrape_url": "http://127.0.0.1:9132/snmp?target=127.0.0.1%3A11162&module=if_mib&auth=public_v2",
+  "promtool_ran": false,
+  "metrics": [
+    {
+      "name": "network_interface_count",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 1,
+      "sample_value": 2.0,
+      "expected_labels": [],
+      "observed_labels": [],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_admin_status",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_oper_status",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_last_change_seconds",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 12.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_speed_bits",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 100000000.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_bytes_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 161102.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_bytes_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 165696.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_errors_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 12.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_errors_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 3.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    }
+  ]
+}

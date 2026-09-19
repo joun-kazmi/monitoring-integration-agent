@@ -1,0 +1,336 @@
+{
+  "ok": true,
+  "failures": [],
+  "warnings": [],
+  "metrics_expected": 18,
+  "metrics_found": 18,
+  "unexpected_metrics": [],
+  "scrape_url": "http://127.0.0.1:9131/snmp?target=127.0.0.1%3A11161&module=netdev&auth=public_v2",
+  "promtool_ran": false,
+  "metrics": [
+    {
+      "name": "network_interface_receive_bytes_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 8902.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_bytes_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 27116.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_unicast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1356.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_unicast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 15644.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_multicast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1818.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_multicast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 3617.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_broadcast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 2220.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_broadcast_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 4033.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_errors_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 22.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_errors_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 21.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_discards_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 20.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_discards_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 22.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_receive_unknown_protocol_packets_total",
+      "expected_type": "counter",
+      "observed_type": "counter",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 17.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_transmit_queue_length_packets",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 515891312.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_speed_mbps",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 10.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_oper_status",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_admin_status",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1.0,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    },
+    {
+      "name": "network_interface_last_change_seconds",
+      "expected_type": "gauge",
+      "observed_type": "gauge",
+      "status": "ok",
+      "series_count": 2,
+      "sample_value": 1239999.99,
+      "expected_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "observed_labels": [
+        "ifIndex",
+        "interface"
+      ],
+      "required": true,
+      "detail": ""
+    }
+  ]
+}

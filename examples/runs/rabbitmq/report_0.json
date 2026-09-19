@@ -1,0 +1,42 @@
+{
+  "ok": false,
+  "failures": [
+    {
+      "kind": "missing_metric",
+      "metric": "rabbitmq_queue_memory_bytes",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    }
+  ],
+  "warnings": [
+    {
+      "kind": "missing_metric",
+      "metric": "rabbitmq_messages_published_total",
+      "detail": "metric not found in scrape output",
+      "severity": "warning"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "rabbitmq_messages_delivered_total",
+      "detail": "metric not found in scrape output",
+      "severity": "warning"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "rabbitmq_messages_acknowledged_total",
+      "detail": "metric not found in scrape output",
+      "severity": "warning"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "rabbitmq_messages_confirmed_total",
+      "detail": "metric not found in scrape output",
+      "severity": "warning"
+    }
+  ],
+  "metrics_expected": 28,
+  "metrics_found": 23,
+  "unexpected_metrics": [],
+  "scrape_url": "http://127.0.0.1:9464/metrics",
+  "promtool_ran": false
+}

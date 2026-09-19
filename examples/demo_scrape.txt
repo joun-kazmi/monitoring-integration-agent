@@ -1,0 +1,2 @@
+# TYPE demo_requests_total counter
+demo_requests_total{method="get"} 5

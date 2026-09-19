@@ -1,0 +1,40 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Tests
+        run: pytest tests/ -q
+
+      # The committed run reports are generated from the committed run records.
+      # Rebuilding them here proves the published pages can't drift from the
+      # code that renders them. No model calls, no network.
+      - name: Reports rebuild reproducibly
+        if: matrix.python-version == '3.12'
+        run: |
+          python -m miagent.cli report --manifest docs/reports.manifest.json
+          git diff --exit-code -- docs/reports/ \
+            || { echo "::error::docs/reports/ is stale — re-run the report manifest and commit"; exit 1; }

@@ -1,0 +1,49 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>miagent · run reports</title><style>:root{--bg:#fff;--fg:#14161a;--muted:#5c6470;--line:#e3e6ea;--panel:#f7f8fa;--ok:#0f7b3f;--okbg:#e7f5ec;--bad:#b3261e;--badbg:#fdecea;--warn:#8a5a00;--warnbg:#fff4e0;--code:#0b3a67;--accent:#1c4e80}@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--fg:#e6e8ec;--muted:#9aa3b0;--line:#262b33;--panel:#161a20;--ok:#5ad68d;--okbg:#0e2a1b;--bad:#ff8f84;--badbg:#2c1513;--warn:#f0c26b;--warnbg:#2b2110;--code:#8fc4ff;--accent:#7fb2e8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+code,.mono,pre,td.m,th.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+h1{font-size:19px;margin:0 0 2px;font-weight:650}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+margin:34px 0 10px;font-weight:650}
+.sub{color:var(--muted);font-size:13px}
+.hero{border:1px solid var(--line);border-radius:8px;padding:16px 18px;background:var(--panel)}
+.hero .top{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:12px;
+letter-spacing:.04em}
+.badge.ok{background:var(--okbg);color:var(--ok)} .badge.bad{background:var(--badbg);color:var(--bad)}
+.kpis{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
+.kpi .v{font-size:19px;font-weight:650;font-family:ui-monospace,monospace}
+.kpi .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.note{margin-top:12px;padding:9px 11px;border-left:3px solid var(--accent);
+background:var(--bg);color:var(--muted);font-size:13px;border-radius:0 4px 4px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.m{font-size:12.5px}
+.t-ok{color:var(--ok);font-weight:700} .t-bad{color:var(--bad);font-weight:700}
+.t-warn{color:var(--warn);font-weight:700}
+.pill{display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:650;
+background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+.pill.code{background:var(--okbg);color:var(--ok);border-color:transparent}
+.pill.fast{color:var(--accent)} .pill.standard{color:var(--fg)}
+.pill.strong{background:var(--warnbg);color:var(--warn);border-color:transparent}
+.dim{color:var(--muted)}
+.iter{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.iter h3{margin:0 0 6px;font-size:13px;font-family:ui-monospace,monospace}
+.flist{margin:6px 0 0;padding-left:18px}
+.flist li{margin:1px 0;font-family:ui-monospace,monospace;font-size:12px}
+details{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--panel)}
+summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:13px}
+summary .dim{font-weight:400}
+details pre{margin:0;padding:12px 14px;overflow-x:auto;background:var(--bg);
+border-top:1px solid var(--line);font-size:12px;line-height:1.5;
+border-radius:0 0 7px 7px;max-height:520px;overflow-y:auto}
+footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);
+color:var(--muted);font-size:12px}
+a{color:var(--accent)}
+.card{display:block;border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;text-decoration:none;color:inherit;background:var(--panel)}.card:hover{border-color:var(--accent)}.ct{font-weight:650;margin-bottom:3px}.cb{color:var(--muted);font-size:13px;margin-bottom:7px}.cs{font-size:11.5px;color:var(--muted)}</style></head><body><div class='wrap'><h1>miagent · run reports</h1><div class='sub'>Monitoring integrations generated from docs or MIBs, verified by execution</div><div class='note' style='margin:16px 0 24px'>Each page below is a full record of one pipeline run: the metric contract the model designed, the artifact it generated, what the artifact actually produced when executed against a live target, and the per-stage token cost. Correctness in every run was decided by scraping the artifact and diffing it against the contract — never by a model.</div><a class='card' href='rabbitmq.html'><div class='ct'>RabbitMQ · REST docs → Python exporter</div><div class='cb'>The full pipeline on a clean run: docs normalized by code, metric surface and IR designed on the standard tier, exporter code generated on the strong tier, then verified by execution. Shows where each token was spent.</div><div class='cs mono'>PASS 28/28 metrics · 0 repair iteration(s) · 3 model call(s) · 22.0K in / 11.4K out</div></a><a class='card' href='rabbitmq-self-repair.html'><div class='ct'>RabbitMQ · recovering from an upstream API change</div><div class='cb'>The upstream API was changed underneath a working integration (a renamed field and a newly-nested one). Validation caught it, and repair fixed the exporter in one iteration using fresh endpoint samples as ground truth.</div><div class='cs mono'>PASS 28/28 metrics · 1 repair iteration(s) · 1 model call(s) · 13.7K in / 6.0K out</div></a><a class='card' href='snmp-ifmib.html'><div class='ct'>SNMP device · IF-MIB → snmp_exporter config</div><div class='cb'>One model call total: the MIB is parsed deterministically, the model only chooses what to monitor and how to name it, and snmp.yml plus the validation contract are compiled from that same selection so they cannot drift.</div><div class='cs mono'>PASS 18/18 metrics · 0 repair iteration(s) · 1 model call(s) · 8.9K in / 3.3K out</div></a><a class='card' href='snmp-legacy-switch.html'><div class='ct'>Legacy switch · SNMP selection self-repair</div><div class='cb'>A device with no ifXTable, so the 64-bit counters the model preferred do not exist. Repair walked the device, saw which OIDs actually respond, and substituted the 32-bit equivalents rather than dropping throughput coverage.</div><div class='cs mono'>PASS 9/9 metrics · 1 repair iteration(s) · 2 model call(s) · 21.2K in / 3.3K out</div></a><a class='card' href='rabbitmq-from-url.html'><div class='ct'>RabbitMQ · documentation ingested over HTTP</div><div class='cb'>Same pipeline, but the documentation was fetched from a URL and normalized before extraction — the path used for OpenAPI specs and HTML API references.</div><div class='cs mono'>PASS 27/27 metrics · 0 repair iteration(s) · 3 model call(s) · 15.8K in / 13.4K out</div></a><footer>Generated by <code>miagent report --manifest</code> · <a href='https://github.com/joun-kazmi/monitoring-integration-agent'>source repository</a></footer></div></body></html>

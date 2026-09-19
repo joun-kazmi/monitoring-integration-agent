@@ -1,0 +1,41 @@
+{
+  "service": "demo",
+  "kind": "otel",
+  "endpoints": [],
+  "metrics": [
+    {
+      "name": "demo_requests_total",
+      "type": "counter",
+      "help": "",
+      "unit": "",
+      "labels": [
+        {
+          "name": "method",
+          "description": "",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": null,
+        "max": null
+      },
+      "source": "",
+      "required": true
+    },
+    {
+      "name": "demo_queue_depth",
+      "type": "gauge",
+      "help": "",
+      "unit": "",
+      "labels": [],
+      "value": {
+        "min": null,
+        "max": null
+      },
+      "source": "",
+      "required": true
+    }
+  ],
+  "notes": ""
+}

@@ -1,0 +1,40 @@
+{
+  "calls": 3,
+  "input_tokens": 21991,
+  "output_tokens": 11419,
+  "by_model": {
+    "sonnet": {
+      "calls": 2,
+      "input_tokens": 12376,
+      "output_tokens": 6949
+    },
+    "opus": {
+      "calls": 1,
+      "input_tokens": 9615,
+      "output_tokens": 4470
+    }
+  },
+  "by_stage": {
+    "extract": {
+      "calls": 1,
+      "input_tokens": 4856,
+      "output_tokens": 2305,
+      "model": "sonnet",
+      "tier": "standard"
+    },
+    "schema": {
+      "calls": 1,
+      "input_tokens": 7520,
+      "output_tokens": 4644,
+      "model": "sonnet",
+      "tier": "standard"
+    },
+    "gen_code": {
+      "calls": 1,
+      "input_tokens": 9615,
+      "output_tokens": 4470,
+      "model": "opus",
+      "tier": "strong"
+    }
+  }
+}

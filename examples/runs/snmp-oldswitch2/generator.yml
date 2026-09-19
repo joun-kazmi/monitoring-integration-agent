@@ -1,0 +1,46 @@
+# snmp_exporter generator config, produced by migen.
+# MIB modules required: IF-MIB
+# Run: generator generate -m <mib-dir> -g generator.yml -o snmp.yml
+# NOTE: `rename_to` under overrides is a migen annotation recording the
+# intended Prometheus metric name; the upstream generator ignores it.
+auths:
+  public_v2:
+    community: public
+    version: 2
+modules:
+  if_mib:
+    walk:
+    - ifAdminStatus
+    - ifDescr
+    - ifInErrors
+    - ifInOctets
+    - ifLastChange
+    - ifNumber
+    - ifOperStatus
+    - ifOutErrors
+    - ifOutOctets
+    - ifSpeed
+    lookups:
+    - source_indexes:
+      - ifIndex
+      lookup: ifDescr
+      drop_source_indexes: false
+    overrides:
+      ifNumber:
+        rename_to: network_interface_count
+      ifAdminStatus:
+        rename_to: network_interface_admin_status
+      ifOperStatus:
+        rename_to: network_interface_oper_status
+      ifLastChange:
+        rename_to: network_interface_last_change_timeticks_seconds
+      ifSpeed:
+        rename_to: network_interface_speed_bits
+      ifInOctets:
+        rename_to: network_interface_receive_bytes_total
+      ifOutOctets:
+        rename_to: network_interface_transmit_bytes_total
+      ifInErrors:
+        rename_to: network_interface_receive_errors_total
+      ifOutErrors:
+        rename_to: network_interface_transmit_errors_total

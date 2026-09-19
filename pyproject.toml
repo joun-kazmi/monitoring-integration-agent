@@ -1,0 +1,29 @@
+[project]
+name = "monitoring-integration-agent"
+version = "0.1.0"
+description = "An agent that writes Prometheus exporters and SNMP/OTel collector configs from API docs, then proves they work by running them."
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.5",
+    "pydantic-settings>=2.0",
+    "httpx>=0.27",
+    "prometheus-client>=0.20",
+    "beautifulsoup4>=4.12",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.60"]
+openai = ["openai>=1.40"]
+snmp = ["pysmi>=1.5", "pysnmp>=6.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+miagent = "miagent.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

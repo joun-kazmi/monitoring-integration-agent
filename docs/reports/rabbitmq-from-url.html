@@ -1,0 +1,1092 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>RabbitMQ · documentation ingested over HTTP · miagent report</title><style>:root{--bg:#fff;--fg:#14161a;--muted:#5c6470;--line:#e3e6ea;--panel:#f7f8fa;--ok:#0f7b3f;--okbg:#e7f5ec;--bad:#b3261e;--badbg:#fdecea;--warn:#8a5a00;--warnbg:#fff4e0;--code:#0b3a67;--accent:#1c4e80}@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--fg:#e6e8ec;--muted:#9aa3b0;--line:#262b33;--panel:#161a20;--ok:#5ad68d;--okbg:#0e2a1b;--bad:#ff8f84;--badbg:#2c1513;--warn:#f0c26b;--warnbg:#2b2110;--code:#8fc4ff;--accent:#7fb2e8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+code,.mono,pre,td.m,th.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px}
+h1{font-size:19px;margin:0 0 2px;font-weight:650}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+margin:34px 0 10px;font-weight:650}
+.sub{color:var(--muted);font-size:13px}
+.hero{border:1px solid var(--line);border-radius:8px;padding:16px 18px;background:var(--panel)}
+.hero .top{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:700;font-size:12px;
+letter-spacing:.04em}
+.badge.ok{background:var(--okbg);color:var(--ok)} .badge.bad{background:var(--badbg);color:var(--bad)}
+.kpis{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px}
+.kpi .v{font-size:19px;font-weight:650;font-family:ui-monospace,monospace}
+.kpi .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.note{margin-top:12px;padding:9px 11px;border-left:3px solid var(--accent);
+background:var(--bg);color:var(--muted);font-size:13px;border-radius:0 4px 4px 0}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.m{font-size:12.5px}
+.t-ok{color:var(--ok);font-weight:700} .t-bad{color:var(--bad);font-weight:700}
+.t-warn{color:var(--warn);font-weight:700}
+.pill{display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:650;
+background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+.pill.code{background:var(--okbg);color:var(--ok);border-color:transparent}
+.pill.fast{color:var(--accent)} .pill.standard{color:var(--fg)}
+.pill.strong{background:var(--warnbg);color:var(--warn);border-color:transparent}
+.dim{color:var(--muted)}
+.iter{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.iter h3{margin:0 0 6px;font-size:13px;font-family:ui-monospace,monospace}
+.flist{margin:6px 0 0;padding-left:18px}
+.flist li{margin:1px 0;font-family:ui-monospace,monospace;font-size:12px}
+details{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--panel)}
+summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:13px}
+summary .dim{font-weight:400}
+details pre{margin:0;padding:12px 14px;overflow-x:auto;background:var(--bg);
+border-top:1px solid var(--line);font-size:12px;line-height:1.5;
+border-radius:0 0 7px 7px;max-height:520px;overflow-y:auto}
+footer{margin-top:44px;padding-top:14px;border-top:1px solid var(--line);
+color:var(--muted);font-size:12px}
+a{color:var(--accent)}
+</style></head><body><div class='wrap'><h1>RabbitMQ · documentation ingested over HTTP</h1><div class='sub'>miagent run report · workdir <code>rabbitmq-url</code></div><div class='hero' style='margin-top:14px'><div class='top'><div><span class='badge ok'>PASS</span> <span class='mono'>27/27 expected metrics verified</span></div><div class='dim mono' style='font-size:12px'>http://127.0.0.1:9465/metrics</div></div><div class='kpis'><div class='kpi'><div class='v'>0</div><div class='k'>repair iterations</div></div><div class='kpi'><div class='v'>3</div><div class='k'>model calls</div></div><div class='kpi'><div class='v'>15.8K</div><div class='k'>tokens in</div></div><div class='kpi'><div class='v'>13.4K</div><div class='k'>tokens out</div></div><div class='kpi'><div class='v'>1</div><div class='k'>validation runs</div></div><div class='kpi'><div class='v'>39</div><div class='k'>series scraped</div></div></div><div class='note'>Every validation run above cost <strong>0 tokens</strong>: correctness is decided by scraping the artifact and diffing against the IR, never by a model. Models are used only to read docs, generate the artifact, and repair it.</div></div><h2>Pipeline</h2><div class='scroll'><table><tr><th>Stage</th><th>Executed by</th><th>Model</th><th>Cost</th></tr><tr><td>Ingest docs</td><td><span class='pill code'>deterministic code</span></td><td class='m'>—</td><td class='m dim'>2,793 chars normalized</td></tr><tr><td>Run + validate</td><td><span class='pill code'>deterministic code</span></td><td class='m'>—</td><td class='m dim'>1 run(s), 0 tokens</td></tr></table></div><div class='note'>Per-stage attribution was added after this run; only totals are available here.</div><h2>Validation diff · expected (IR) vs observed (scrape)</h2><div class='scroll'><table><tr><th></th><th>Metric</th><th>Type</th><th>Observed</th><th>Series</th><th>Sample</th><th>Labels</th><th>Note</th></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_messages_published_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>1</td><td class='m dim'>103,458</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_messages_delivered_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>1</td><td class='m dim'>99,123</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_messages_acknowledged_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>1</td><td class='m dim'>99,103</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_messages_confirmed_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>1</td><td class='m dim'>103,413</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_totals_messages</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>335</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_totals_messages_ready</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>320</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_totals_messages_unacknowledged</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>15</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_object_totals_connections</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>4</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_object_totals_channels</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>8</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_object_totals_exchanges</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>12</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_object_totals_queues</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>3</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_object_totals_consumers</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>5</td><td class='m dim'>—</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_messages</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>3</td><td class='m dim'>120</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_messages_ready</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>3</td><td class='m dim'>118</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_messages_unacknowledged</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>3</td><td class='m dim'>2</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_consumers</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>3</td><td class='m dim'>2</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_memory_bytes</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>3</td><td class='m dim'>187,312</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_queue_messages_published_total</td><td class='m dim'>counter</td><td class='m'>counter</td><td class='m'>3</td><td class='m dim'>51,729</td><td class='m dim'>queue, vhost</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_mem_used_bytes</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>142,606,336</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_fd_used</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>42</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_fd_total</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>1,048,576</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_sockets_used</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>6</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_sockets_total</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>943,626</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_processes_used</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>512</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_processes_total</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>1,048,576</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_uptime_milliseconds</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>22,267</td><td class='m dim'>node</td><td class='dim'></td></tr><tr><td class='t-ok'>✓</td><td class='m'>rabbitmq_node_disk_free_bytes</td><td class='m dim'>gauge</td><td class='m'>gauge</td><td class='m'>1</td><td class='m dim'>53,687,091,200</td><td class='m dim'>node</td><td class='dim'></td></tr></table></div><h2>Cost ledger</h2><div class='scroll'><table><tr><th>Model</th><th>Calls</th><th>Tokens in</th><th>Tokens out</th></tr><tr><td class='m'>opus</td><td class='m'>1</td><td class='m'>7.4K</td><td class='m'>3.8K</td></tr><tr><td class='m'>sonnet</td><td class='m'>2</td><td class='m'>8.4K</td><td class='m'>9.6K</td></tr><tr><td class='m'><strong>total</strong></td><td class='m'><strong>3</strong></td><td class='m'><strong>15.8K</strong></td><td class='m'><strong>13.4K</strong></td></tr><tr><td class='m'>validation (1 run(s))</td><td class='m t-ok'>0</td><td class='m t-ok'>0</td><td class='m t-ok'>0</td></tr></table></div><h2>Artifacts</h2><details><summary>exporter.py <span class='dim'>— Generated exporter · 265 lines</span></summary><pre>#!/usr/bin/env python3
+&quot;&quot;&quot;Prometheus exporter for the RabbitMQ Management HTTP API.&quot;&quot;&quot;
+
+import argparse
+import logging
+import sys
+import time
+
+import requests
+from prometheus_client import start_http_server
+from prometheus_client.core import (
+    REGISTRY,
+    CounterMetricFamily,
+    GaugeMetricFamily,
+)
+
+LOG = logging.getLogger(&quot;rabbitmq_exporter&quot;)
+REQUEST_TIMEOUT = 5
+
+# (metric name without _total, help, JSON path)
+OVERVIEW_COUNTERS = [
+    (&quot;rabbitmq_messages_published&quot;,
+     &quot;Total number of messages published to the cluster since node start.&quot;,
+     (&quot;message_stats&quot;, &quot;publish&quot;)),
+    (&quot;rabbitmq_messages_delivered&quot;,
+     &quot;Total number of messages delivered to consumers (with ack) plus basic.get calls since node start.&quot;,
+     (&quot;message_stats&quot;, &quot;deliver_get&quot;)),
+    (&quot;rabbitmq_messages_acknowledged&quot;,
+     &quot;Total number of messages acknowledged by consumers since node start.&quot;,
+     (&quot;message_stats&quot;, &quot;ack&quot;)),
+    (&quot;rabbitmq_messages_confirmed&quot;,
+     &quot;Total number of messages confirmed by the broker since node start.&quot;,
+     (&quot;message_stats&quot;, &quot;confirm&quot;)),
+]
+
+OVERVIEW_GAUGES = [
+    (&quot;rabbitmq_queue_totals_messages&quot;,
+     &quot;Total number of messages (ready plus unacknowledged) across all queues in the cluster.&quot;,
+     (&quot;queue_totals&quot;, &quot;messages&quot;)),
+    (&quot;rabbitmq_queue_totals_messages_ready&quot;,
+     &quot;Total number of messages ready for delivery across all queues in the cluster.&quot;,
+     (&quot;queue_totals&quot;, &quot;messages_ready&quot;)),
+    (&quot;rabbitmq_queue_totals_messages_unacknowledged&quot;,
+     &quot;Total number of messages delivered but not yet acknowledged across all queues in the cluster.&quot;,
+     (&quot;queue_totals&quot;, &quot;messages_unacknowledged&quot;)),
+    (&quot;rabbitmq_object_totals_connections&quot;,
+     &quot;Current number of open connections in the cluster.&quot;,
+     (&quot;object_totals&quot;, &quot;connections&quot;)),
+    (&quot;rabbitmq_object_totals_channels&quot;,
+     &quot;Current number of open channels in the cluster.&quot;,
+     (&quot;object_totals&quot;, &quot;channels&quot;)),
+    (&quot;rabbitmq_object_totals_exchanges&quot;,
+     &quot;Current number of exchanges in the cluster.&quot;,
+     (&quot;object_totals&quot;, &quot;exchanges&quot;)),
+    (&quot;rabbitmq_object_totals_queues&quot;,
+     &quot;Current number of queues in the cluster.&quot;,
+     (&quot;object_totals&quot;, &quot;queues&quot;)),
+    (&quot;rabbitmq_object_totals_consumers&quot;,
+     &quot;Current number of consumers in the cluster.&quot;,
+     (&quot;object_totals&quot;, &quot;consumers&quot;)),
+]
+
+QUEUE_GAUGES = [
+    (&quot;rabbitmq_queue_messages&quot;,
+     &quot;Total number of messages (ready plus unacknowledged) in the queue.&quot;,
+     (&quot;messages&quot;,)),
+    (&quot;rabbitmq_queue_messages_ready&quot;,
+     &quot;Number of messages ready for delivery in the queue.&quot;,
+     (&quot;messages_ready&quot;,)),
+    (&quot;rabbitmq_queue_messages_unacknowledged&quot;,
+     &quot;Number of messages delivered but awaiting acknowledgement in the queue.&quot;,
+     (&quot;messages_unacknowledged&quot;,)),
+    (&quot;rabbitmq_queue_consumers&quot;,
+     &quot;Number of consumers attached to the queue.&quot;,
+     (&quot;consumers&quot;,)),
+    (&quot;rabbitmq_queue_memory_bytes&quot;,
+     &quot;Bytes of memory used by the queue&#x27;s Erlang process.&quot;,
+     (&quot;memory&quot;,)),
+]
+
+QUEUE_COUNTERS = [
+    (&quot;rabbitmq_queue_messages_published&quot;,
+     &quot;Total number of messages published to this queue since it was declared.&quot;,
+     (&quot;message_stats&quot;, &quot;publish&quot;)),
+]
+
+NODE_GAUGES = [
+    (&quot;rabbitmq_node_mem_used_bytes&quot;,
+     &quot;Bytes of memory used by the node&#x27;s Erlang runtime.&quot;,
+     (&quot;mem_used&quot;,)),
+    (&quot;rabbitmq_node_fd_used&quot;,
+     &quot;Number of file descriptors currently used by the node.&quot;,
+     (&quot;fd_used&quot;,)),
+    (&quot;rabbitmq_node_fd_total&quot;,
+     &quot;Total number of file descriptors available to the node.&quot;,
+     (&quot;fd_total&quot;,)),
+    (&quot;rabbitmq_node_sockets_used&quot;,
+     &quot;Number of file descriptors used as sockets by the node.&quot;,
+     (&quot;sockets_used&quot;,)),
+    (&quot;rabbitmq_node_sockets_total&quot;,
+     &quot;Total number of file descriptors available for use as sockets by the node.&quot;,
+     (&quot;sockets_total&quot;,)),
+    (&quot;rabbitmq_node_processes_used&quot;,
+     &quot;Number of Erlang processes currently used on the node.&quot;,
+     (&quot;proc_used&quot;,)),
+    (&quot;rabbitmq_node_processes_total&quot;,
+     &quot;Total number of Erlang processes available on the node.&quot;,
+     (&quot;proc_total&quot;,)),
+    (&quot;rabbitmq_node_uptime_milliseconds&quot;,
+     &quot;Milliseconds since the node was started.&quot;,
+     (&quot;uptime&quot;,)),
+    (&quot;rabbitmq_node_disk_free_bytes&quot;,
+     &quot;Bytes of free disk space available on the node&#x27;s disk monitor partition.&quot;,
+     (&quot;disk_free&quot;,)),
+]
+
+
+def get_path(obj, path):
+    &quot;&quot;&quot;Walk a nested dict path and return a float, or None if absent/non-numeric.&quot;&quot;&quot;
+    cur = obj
+    for key in path:
+        if not isinstance(cur, dict) or key not in cur:
+            return None
+        cur = cur[key]
+    if isinstance(cur, bool) or cur is None:
+        return None
+    if isinstance(cur, (int, float)):
+        return float(cur)
+    if isinstance(cur, str):
+        try:
+            return float(cur)
+        except ValueError:
+            return None
+    return None
+
+
+class RabbitMQCollector:
+    def __init__(self, target, username=None, password=None):
+        self.target = target.rstrip(&quot;/&quot;)
+        self.session = requests.Session()
+        if username is not None:
+            self.session.auth = (username, password if password is not None else &quot;&quot;)
+        self.session.headers.update({&quot;Accept&quot;: &quot;application/json&quot;})
+
+    def _fetch(self, path):
+        url = self.target + path
+        try:
+            resp = self.session.get(url, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as exc:
+            LOG.error(&quot;Request to %s failed: %s&quot;, url, exc)
+        except ValueError as exc:
+            LOG.error(&quot;Invalid JSON from %s: %s&quot;, url, exc)
+        return None
+
+    def describe(self):
+        # Avoid polling the target at registration time.
+        return []
+
+    def collect(self):
+        yield from self._collect_overview()
+        yield from self._collect_queues()
+        yield from self._collect_nodes()
+
+    def _collect_overview(self):
+        data = self._fetch(&quot;/api/overview&quot;)
+        if not isinstance(data, dict):
+            if data is not None:
+                LOG.error(&quot;Unexpected /api/overview payload type: %s&quot;, type(data).__name__)
+            return
+        for name, help_text, path in OVERVIEW_COUNTERS:
+            value = get_path(data, path)
+            if value is None:
+                continue
+            fam = CounterMetricFamily(name, help_text)
+            fam.add_metric([], value)
+            yield fam
+        for name, help_text, path in OVERVIEW_GAUGES:
+            value = get_path(data, path)
+            if value is None:
+                continue
+            fam = GaugeMetricFamily(name, help_text)
+            fam.add_metric([], value)
+            yield fam
+
+    def _collect_queues(self):
+        data = self._fetch(&quot;/api/queues&quot;)
+        if not isinstance(data, list):
+            if data is not None:
+                LOG.error(&quot;Unexpected /api/queues payload type: %s&quot;, type(data).__name__)
+            return
+        labels = [&quot;vhost&quot;, &quot;queue&quot;]
+        gauges = {n: GaugeMetricFamily(n, h, labels=labels) for n, h, _ in QUEUE_GAUGES}
+        counters = {n: CounterMetricFamily(n, h, labels=labels) for n, h, _ in QUEUE_COUNTERS}
+        for q in data:
+            if not isinstance(q, dict):
+                continue
+            qname = q.get(&quot;name&quot;)
+            vhost = q.get(&quot;vhost&quot;)
+            if qname is None or vhost is None:
+                continue
+            label_values = [str(vhost), str(qname)]
+            for name, _, path in QUEUE_GAUGES:
+                value = get_path(q, path)
+                if value is not None:
+                    gauges[name].add_metric(label_values, value)
+            for name, _, path in QUEUE_COUNTERS:
+                value = get_path(q, path)
+                if value is not None:
+                    counters[name].add_metric(label_values, value)
+        for fam in list(gauges.values()) + list(counters.values()):
+            if fam.samples:
+                yield fam
+
+    def _collect_nodes(self):
+        data = self._fetch(&quot;/api/nodes&quot;)
+        if not isinstance(data, list):
+            if data is not None:
+                LOG.error(&quot;Unexpected /api/nodes payload type: %s&quot;, type(data).__name__)
+            return
+        gauges = {n: GaugeMetricFamily(n, h, labels=[&quot;node&quot;]) for n, h, _ in NODE_GAUGES}
+        for node in data:
+            if not isinstance(node, dict):
+                continue
+            node_name = node.get(&quot;name&quot;)
+            if node_name is None:
+                continue
+            for name, _, path in NODE_GAUGES:
+                value = get_path(node, path)
+                if value is not None:
+                    gauges[name].add_metric([str(node_name)], value)
+        for fam in gauges.values():
+            if fam.samples:
+                yield fam
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description=&quot;RabbitMQ Prometheus exporter&quot;)
+    parser.add_argument(&quot;--port&quot;, type=int, required=True, help=&quot;Port to serve /metrics on&quot;)
+    parser.add_argument(&quot;--target&quot;, required=True,
+                        help=&quot;Base URL of the RabbitMQ management API, e.g. http://localhost:15672&quot;)
+    parser.add_argument(&quot;--username&quot;, default=None, help=&quot;Basic auth username&quot;)
+    parser.add_argument(&quot;--password&quot;, default=None, help=&quot;Basic auth password&quot;)
+    return parser.parse_args(argv)
+
+
+def main():
+    logging.basicConfig(
+        stream=sys.stderr,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s: %(message)s&quot;,
+    )
+    args = parse_args()
+    collector = RabbitMQCollector(args.target, args.username, args.password)
+    REGISTRY.register(collector)
+    start_http_server(args.port)
+    LOG.info(&quot;Serving metrics on :%d for target %s&quot;, args.port, args.target)
+    while True:
+        time.sleep(3600)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</pre></details><details><summary>spec.json <span class='dim'>— Metric IR (validation contract) · 525 lines</span></summary><pre>{
+  &quot;service&quot;: &quot;rabbitmq&quot;,
+  &quot;kind&quot;: &quot;python_exporter&quot;,
+  &quot;endpoints&quot;: [
+    {
+      &quot;url&quot;: &quot;/api/overview&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;Whole-system summary including message stats, queue totals, and object totals&quot;
+    },
+    {
+      &quot;url&quot;: &quot;/api/queues&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;List of all queues across all vhosts&quot;
+    },
+    {
+      &quot;url&quot;: &quot;/api/nodes&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;List of nodes in the cluster&quot;
+    }
+  ],
+  &quot;metrics&quot;: [
+    {
+      &quot;name&quot;: &quot;rabbitmq_messages_published_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total number of messages published to the cluster since node start.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#message_stats.publish&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_messages_delivered_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total number of messages delivered to consumers (with ack) plus basic.get calls since node start.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#message_stats.deliver_get&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_messages_acknowledged_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total number of messages acknowledged by consumers since node start.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#message_stats.ack&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_messages_confirmed_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total number of messages confirmed by the broker since node start.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#message_stats.confirm&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_totals_messages&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of messages (ready plus unacknowledged) across all queues in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#queue_totals.messages&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_totals_messages_ready&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of messages ready for delivery across all queues in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#queue_totals.messages_ready&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_totals_messages_unacknowledged&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of messages delivered but not yet acknowledged across all queues in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#queue_totals.messages_unacknowledged&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_object_totals_connections&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current number of open connections in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#object_totals.connections&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_object_totals_channels&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current number of open channels in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#object_totals.channels&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_object_totals_exchanges&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current number of exchanges in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#object_totals.exchanges&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_object_totals_queues&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current number of queues in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#object_totals.queues&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_object_totals_consumers&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Current number of consumers in the cluster.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/overview#object_totals.consumers&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_messages&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of messages (ready plus unacknowledged) in the queue.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#messages&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_messages_ready&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of messages ready for delivery in the queue.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#messages_ready&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_messages_unacknowledged&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of messages delivered but awaiting acknowledgement in the queue.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#messages_unacknowledged&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_consumers&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of consumers attached to the queue.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#consumers&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_memory_bytes&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Bytes of memory used by the queue&#x27;s Erlang process.&quot;,
+      &quot;unit&quot;: &quot;bytes&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#memory&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_queue_messages_published_total&quot;,
+      &quot;type&quot;: &quot;counter&quot;,
+      &quot;help&quot;: &quot;Total number of messages published to this queue since it was declared.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;vhost&quot;,
+          &quot;description&quot;: &quot;Virtual host the queue belongs to.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;queue&quot;,
+          &quot;description&quot;: &quot;Name of the queue.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/queues[]#message_stats.publish&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_mem_used_bytes&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Bytes of memory used by the node&#x27;s Erlang runtime.&quot;,
+      &quot;unit&quot;: &quot;bytes&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#mem_used&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_fd_used&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of file descriptors currently used by the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#fd_used&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_fd_total&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of file descriptors available to the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#fd_total&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_sockets_used&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of file descriptors used as sockets by the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#sockets_used&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_sockets_total&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of file descriptors available for use as sockets by the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#sockets_total&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_processes_used&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Number of Erlang processes currently used on the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#proc_used&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_processes_total&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Total number of Erlang processes available on the node.&quot;,
+      &quot;unit&quot;: &quot;&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#proc_total&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_uptime_milliseconds&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Milliseconds since the node was started.&quot;,
+      &quot;unit&quot;: &quot;milliseconds&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#uptime&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;rabbitmq_node_disk_free_bytes&quot;,
+      &quot;type&quot;: &quot;gauge&quot;,
+      &quot;help&quot;: &quot;Bytes of free disk space available on the node&#x27;s disk monitor partition.&quot;,
+      &quot;unit&quot;: &quot;bytes&quot;,
+      &quot;labels&quot;: [
+        {
+          &quot;name&quot;: &quot;node&quot;,
+          &quot;description&quot;: &quot;Name of the RabbitMQ node.&quot;,
+          &quot;allowed_values&quot;: null,
+          &quot;required&quot;: true
+        }
+      ],
+      &quot;value&quot;: {
+        &quot;min&quot;: 0.0,
+        &quot;max&quot;: null
+      },
+      &quot;source&quot;: &quot;/api/nodes[]#disk_free&quot;,
+      &quot;required&quot;: true
+    }
+  ],
+  &quot;notes&quot;: &quot;Cluster-wide totals from /api/overview use no labels and are distinct metric names from the per-queue series under /api/queues to keep label dimensionality consistent per metric name. message_stats.* fields are absent until the corresponding activity has occurred on the node/queue, so they are marked required=false. Per-queue and per-node metrics carry the identifying labels (vhost+queue, node) from their source objects; no unbounded or ID-like labels (e.g. connection/channel IDs, timestamps) are used.&quot;
+}</pre></details><details><summary>surface.json <span class='dim'>— Extracted metric surface · 256 lines</span></summary><pre>{
+  &quot;endpoints&quot;: [
+    {
+      &quot;url&quot;: &quot;/api/overview&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;Whole-system summary including message stats, queue totals, and object totals&quot;
+    },
+    {
+      &quot;url&quot;: &quot;/api/queues&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;List of all queues across all vhosts&quot;
+    },
+    {
+      &quot;url&quot;: &quot;/api/nodes&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;auth&quot;: &quot;basic&quot;,
+      &quot;auth_detail&quot;: &quot;Default guest/guest, only usable from localhost&quot;,
+      &quot;response_format&quot;: &quot;json&quot;,
+      &quot;notes&quot;: &quot;List of nodes in the cluster&quot;
+    }
+  ],
+  &quot;fields&quot;: [
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;message_stats.publish&quot;,
+      &quot;description&quot;: &quot;Count of messages published&quot;,
+      &quot;suggested_kind&quot;: &quot;counter&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;message_stats.deliver_get&quot;,
+      &quot;description&quot;: &quot;Count of messages delivered to consumers (ack mode) plus basic.get&quot;,
+      &quot;suggested_kind&quot;: &quot;counter&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;message_stats.ack&quot;,
+      &quot;description&quot;: &quot;Count of messages acknowledged&quot;,
+      &quot;suggested_kind&quot;: &quot;counter&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;message_stats.confirm&quot;,
+      &quot;description&quot;: &quot;Count of messages confirmed&quot;,
+      &quot;suggested_kind&quot;: &quot;counter&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;queue_totals.messages&quot;,
+      &quot;description&quot;: &quot;Total messages in all queues&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;queue_totals.messages_ready&quot;,
+      &quot;description&quot;: &quot;Messages ready for delivery across all queues&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;queue_totals.messages_unacknowledged&quot;,
+      &quot;description&quot;: &quot;Messages delivered but not yet acknowledged across all queues&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;object_totals.connections&quot;,
+      &quot;description&quot;: &quot;Current number of connections&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;object_totals.channels&quot;,
+      &quot;description&quot;: &quot;Current number of channels&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;object_totals.exchanges&quot;,
+      &quot;description&quot;: &quot;Current number of exchanges&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;object_totals.queues&quot;,
+      &quot;description&quot;: &quot;Current number of queues&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/overview&quot;,
+      &quot;json_path&quot;: &quot;object_totals.consumers&quot;,
+      &quot;description&quot;: &quot;Current number of consumers&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: []
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;messages&quot;,
+      &quot;description&quot;: &quot;Total message count in the queue&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;messages_ready&quot;,
+      &quot;description&quot;: &quot;Messages ready for delivery in the queue&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;messages_unacknowledged&quot;,
+      &quot;description&quot;: &quot;Messages delivered but awaiting ack in the queue&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;consumers&quot;,
+      &quot;description&quot;: &quot;Number of consumers on the queue&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;memory&quot;,
+      &quot;description&quot;: &quot;Bytes of memory used by the queue process&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/queues&quot;,
+      &quot;json_path&quot;: &quot;message_stats.publish&quot;,
+      &quot;description&quot;: &quot;Messages published to this queue&quot;,
+      &quot;suggested_kind&quot;: &quot;counter&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;,
+        &quot;vhost&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;mem_used&quot;,
+      &quot;description&quot;: &quot;Bytes of memory used by the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;fd_used&quot;,
+      &quot;description&quot;: &quot;File descriptors used by the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;fd_total&quot;,
+      &quot;description&quot;: &quot;Total file descriptors available to the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;sockets_used&quot;,
+      &quot;description&quot;: &quot;Sockets used by the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;sockets_total&quot;,
+      &quot;description&quot;: &quot;Total sockets available to the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;proc_used&quot;,
+      &quot;description&quot;: &quot;Erlang processes used by the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;proc_total&quot;,
+      &quot;description&quot;: &quot;Total Erlang processes available to the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;uptime&quot;,
+      &quot;description&quot;: &quot;Milliseconds since node start&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    },
+    {
+      &quot;endpoint_url&quot;: &quot;/api/nodes&quot;,
+      &quot;json_path&quot;: &quot;disk_free&quot;,
+      &quot;description&quot;: &quot;Bytes of free disk space on the node&quot;,
+      &quot;suggested_kind&quot;: &quot;gauge&quot;,
+      &quot;labels_from&quot;: [
+        &quot;name&quot;
+      ]
+    }
+  ],
+  &quot;notes&quot;: &quot;All endpoints are under the RabbitMQ management plugin HTTP API (default port 15672) and require HTTP Basic auth. /api/queues and /api/nodes return arrays; json_path entries are relative to each array element, with vhost+name (queues) or name (nodes) recommended as labels. Fields explicitly documented as &#x27;cumulative counter&#x27; are marked counter; all others (state totals, resource usage) are gauges.&quot;
+}</pre></details><footer>Generated by <code>miagent report</code> from artifacts on disk — no model calls involved. Validation outcomes are reproducible by re-running <code>miagent validate</code> against the same target.</footer></div></body></html>

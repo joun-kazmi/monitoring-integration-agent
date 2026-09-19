@@ -1,0 +1,277 @@
+auths:
+  public_v2:
+    community: public
+    security_level: noAuthNoPriv
+    auth_protocol: MD5
+    priv_protocol: DES
+    version: 2
+modules:
+  netdev:
+    walk:
+    - 1.3.6.1.2.1.2.2.1.7
+    - 1.3.6.1.2.1.2.2.1.8
+    - 1.3.6.1.2.1.2.2.1.9
+    - 1.3.6.1.2.1.2.2.1.13
+    - 1.3.6.1.2.1.2.2.1.14
+    - 1.3.6.1.2.1.2.2.1.15
+    - 1.3.6.1.2.1.2.2.1.19
+    - 1.3.6.1.2.1.2.2.1.20
+    - 1.3.6.1.2.1.2.2.1.21
+    - 1.3.6.1.2.1.31.1.1.1.1
+    - 1.3.6.1.2.1.31.1.1.1.6
+    - 1.3.6.1.2.1.31.1.1.1.7
+    - 1.3.6.1.2.1.31.1.1.1.8
+    - 1.3.6.1.2.1.31.1.1.1.9
+    - 1.3.6.1.2.1.31.1.1.1.10
+    - 1.3.6.1.2.1.31.1.1.1.11
+    - 1.3.6.1.2.1.31.1.1.1.12
+    - 1.3.6.1.2.1.31.1.1.1.13
+    - 1.3.6.1.2.1.31.1.1.1.15
+    metrics:
+    - name: network_interface_receive_bytes_total
+      oid: 1.3.6.1.2.1.31.1.1.1.6
+      type: counter
+      help: Total octets received on the interface (64-bit counter). - ifHCInOctets (1.3.6.1.2.1.31.1.1.1.6)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_bytes_total
+      oid: 1.3.6.1.2.1.31.1.1.1.10
+      type: counter
+      help: Total octets transmitted out of the interface (64-bit counter). - ifHCOutOctets (1.3.6.1.2.1.31.1.1.1.10)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_unicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.7
+      type: counter
+      help: Unicast packets delivered to a higher layer (64-bit counter). - ifHCInUcastPkts (1.3.6.1.2.1.31.1.1.1.7)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_unicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.11
+      type: counter
+      help: Unicast packets requested for transmission (64-bit counter). - ifHCOutUcastPkts (1.3.6.1.2.1.31.1.1.1.11)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_multicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.8
+      type: counter
+      help: Multicast packets delivered to a higher layer (64-bit counter). - ifHCInMulticastPkts (1.3.6.1.2.1.31.1.1.1.8)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_multicast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.12
+      type: counter
+      help: Multicast packets requested for transmission (64-bit counter). - ifHCOutMulticastPkts (1.3.6.1.2.1.31.1.1.1.12)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_broadcast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.9
+      type: counter
+      help: Broadcast packets delivered to a higher layer (64-bit counter). - ifHCInBroadcastPkts (1.3.6.1.2.1.31.1.1.1.9)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_broadcast_packets_total
+      oid: 1.3.6.1.2.1.31.1.1.1.13
+      type: counter
+      help: Broadcast packets requested for transmission (64-bit counter). - ifHCOutBroadcastPkts (1.3.6.1.2.1.31.1.1.1.13)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_errors_total
+      oid: 1.3.6.1.2.1.2.2.1.14
+      type: counter
+      help: Inbound packets that contained errors preventing delivery to a higher layer. - ifInErrors (1.3.6.1.2.1.2.2.1.14)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_errors_total
+      oid: 1.3.6.1.2.1.2.2.1.20
+      type: counter
+      help: Outbound packets that could not be transmitted because of errors. - ifOutErrors (1.3.6.1.2.1.2.2.1.20)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_discards_total
+      oid: 1.3.6.1.2.1.2.2.1.13
+      type: counter
+      help: Inbound packets discarded even though no errors were detected. - ifInDiscards (1.3.6.1.2.1.2.2.1.13)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_discards_total
+      oid: 1.3.6.1.2.1.2.2.1.19
+      type: counter
+      help: Outbound packets discarded even though no errors were detected. - ifOutDiscards (1.3.6.1.2.1.2.2.1.19)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_receive_unknown_protocol_packets_total
+      oid: 1.3.6.1.2.1.2.2.1.15
+      type: counter
+      help: Inbound packets discarded because of an unknown or unsupported protocol. - ifInUnknownProtos (1.3.6.1.2.1.2.2.1.15)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_transmit_queue_length_packets
+      oid: 1.3.6.1.2.1.2.2.1.21
+      type: gauge
+      help: Length of the output packet queue. - ifOutQLen (1.3.6.1.2.1.2.2.1.21)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_speed_mbps
+      oid: 1.3.6.1.2.1.31.1.1.1.15
+      type: gauge
+      help: Estimate of the interface's current bandwidth in Mbit/s. - ifHighSpeed (1.3.6.1.2.1.31.1.1.1.15)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: network_interface_oper_status
+      oid: 1.3.6.1.2.1.2.2.1.8
+      type: gauge
+      help: Current operational state of the interface (1=up,2=down,3=testing,4=unknown,5=dormant,6=notPresent,7=lowerLayerDown). - ifOperStatus (1.3.6.1.2.1.2.2.1.8)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+      enum_values:
+        1: up
+        2: down
+        3: testing
+        4: unknown
+        5: dormant
+        6: notPresent
+        7: lowerLayerDown
+    - name: network_interface_admin_status
+      oid: 1.3.6.1.2.1.2.2.1.7
+      type: gauge
+      help: Desired administrative state of the interface (1=up,2=down,3=testing). - ifAdminStatus (1.3.6.1.2.1.2.2.1.7)
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+      enum_values:
+        1: up
+        2: down
+        3: testing
+    - name: network_interface_last_change_seconds
+      oid: 1.3.6.1.2.1.2.2.1.9
+      type: gauge
+      help: sysUpTime value at the time the interface entered its current operational state. - ifLastChange (1.3.6.1.2.1.2.2.1.9)
+      scale: 0.01
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: interface
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString

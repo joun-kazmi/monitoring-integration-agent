@@ -1,0 +1,17 @@
+{
+  "calls": 3,
+  "input_tokens": 15754,
+  "output_tokens": 13436,
+  "by_model": {
+    "sonnet": {
+      "calls": 2,
+      "input_tokens": 8356,
+      "output_tokens": 9632
+    },
+    "opus": {
+      "calls": 1,
+      "input_tokens": 7398,
+      "output_tokens": 3804
+    }
+  }
+}

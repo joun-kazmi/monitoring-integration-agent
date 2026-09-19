@@ -1,0 +1,89 @@
+{
+  "ok": false,
+  "failures": [
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_speed_megabits",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_bytes_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_bytes_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_unicast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_unicast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_multicast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_multicast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_broadcast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_broadcast_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_discards_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_discards_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_receive_unknown_protocol_packets_total",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    },
+    {
+      "kind": "missing_metric",
+      "metric": "network_interface_transmit_queue_length_packets",
+      "detail": "metric not found in scrape output",
+      "severity": "error"
+    }
+  ],
+  "warnings": [],
+  "metrics_expected": 19,
+  "metrics_found": 6,
+  "unexpected_metrics": [],
+  "scrape_url": "http://127.0.0.1:9119/snmp?target=127.0.0.1%3A11162&module=if_mib&auth=public_v2",
+  "promtool_ran": false
+}

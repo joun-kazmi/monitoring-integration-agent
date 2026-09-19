@@ -1,0 +1,105 @@
+{
+  "module_name": "netdev",
+  "metrics": [
+    {
+      "mib_object": "ifHCInOctets",
+      "metric_name": "network_interface_receive_bytes_total",
+      "help": "Total octets received on the interface (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCOutOctets",
+      "metric_name": "network_interface_transmit_bytes_total",
+      "help": "Total octets transmitted out of the interface (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCInUcastPkts",
+      "metric_name": "network_interface_receive_unicast_packets_total",
+      "help": "Unicast packets delivered to a higher layer (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCOutUcastPkts",
+      "metric_name": "network_interface_transmit_unicast_packets_total",
+      "help": "Unicast packets requested for transmission (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCInMulticastPkts",
+      "metric_name": "network_interface_receive_multicast_packets_total",
+      "help": "Multicast packets delivered to a higher layer (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCOutMulticastPkts",
+      "metric_name": "network_interface_transmit_multicast_packets_total",
+      "help": "Multicast packets requested for transmission (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCInBroadcastPkts",
+      "metric_name": "network_interface_receive_broadcast_packets_total",
+      "help": "Broadcast packets delivered to a higher layer (64-bit counter)."
+    },
+    {
+      "mib_object": "ifHCOutBroadcastPkts",
+      "metric_name": "network_interface_transmit_broadcast_packets_total",
+      "help": "Broadcast packets requested for transmission (64-bit counter)."
+    },
+    {
+      "mib_object": "ifInErrors",
+      "metric_name": "network_interface_receive_errors_total",
+      "help": "Inbound packets that contained errors preventing delivery to a higher layer."
+    },
+    {
+      "mib_object": "ifOutErrors",
+      "metric_name": "network_interface_transmit_errors_total",
+      "help": "Outbound packets that could not be transmitted because of errors."
+    },
+    {
+      "mib_object": "ifInDiscards",
+      "metric_name": "network_interface_receive_discards_total",
+      "help": "Inbound packets discarded even though no errors were detected."
+    },
+    {
+      "mib_object": "ifOutDiscards",
+      "metric_name": "network_interface_transmit_discards_total",
+      "help": "Outbound packets discarded even though no errors were detected."
+    },
+    {
+      "mib_object": "ifInUnknownProtos",
+      "metric_name": "network_interface_receive_unknown_protocol_packets_total",
+      "help": "Inbound packets discarded because of an unknown or unsupported protocol."
+    },
+    {
+      "mib_object": "ifOutQLen",
+      "metric_name": "network_interface_transmit_queue_length_packets",
+      "help": "Length of the output packet queue."
+    },
+    {
+      "mib_object": "ifHighSpeed",
+      "metric_name": "network_interface_speed_mbps",
+      "help": "Estimate of the interface's current bandwidth in Mbit/s."
+    },
+    {
+      "mib_object": "ifOperStatus",
+      "metric_name": "network_interface_oper_status",
+      "help": "Current operational state of the interface (1=up,2=down,3=testing,4=unknown,5=dormant,6=notPresent,7=lowerLayerDown)."
+    },
+    {
+      "mib_object": "ifAdminStatus",
+      "metric_name": "network_interface_admin_status",
+      "help": "Desired administrative state of the interface (1=up,2=down,3=testing)."
+    },
+    {
+      "mib_object": "ifLastChange",
+      "metric_name": "network_interface_last_change_seconds",
+      "help": "sysUpTime value at the time the interface entered its current operational state."
+    }
+  ],
+  "lookups": [
+    {
+      "index_labels": [
+        "ifIndex"
+      ],
+      "source_object": "ifName",
+      "label_name": "interface"
+    }
+  ],
+  "notes": "Focused on ifXTable 64-bit HC counters for throughput to avoid 32-bit wraparound, plus ifTable error/discard counters (no HC equivalents exist) and link-state/saturation gauges. Skipped ifRcvAddressTable, ifStackTable, and ifTestTable as administrative/control tables, and skipped rarely-changing scalars (ifNumber, ifTableLastChange, ifStackLastChange). A single ifIndex->ifName lookup covers all ifIndex-keyed metrics since ifTable and ifXTable share the same index."
+}

@@ -1,0 +1,73 @@
+# snmp_exporter generator config, produced by migen.
+# MIB modules required: IF-MIB
+# Run: generator generate -m <mib-dir> -g generator.yml -o snmp.yml
+# NOTE: `rename_to` under overrides is a migen annotation recording the
+# intended Prometheus metric name; the upstream generator ignores it.
+auths:
+  public_v2:
+    community: public
+    version: 2
+modules:
+  netdev:
+    walk:
+    - ifAdminStatus
+    - ifHCInBroadcastPkts
+    - ifHCInMulticastPkts
+    - ifHCInOctets
+    - ifHCInUcastPkts
+    - ifHCOutBroadcastPkts
+    - ifHCOutMulticastPkts
+    - ifHCOutOctets
+    - ifHCOutUcastPkts
+    - ifHighSpeed
+    - ifInDiscards
+    - ifInErrors
+    - ifInUnknownProtos
+    - ifLastChange
+    - ifName
+    - ifOperStatus
+    - ifOutDiscards
+    - ifOutErrors
+    - ifOutQLen
+    lookups:
+    - source_indexes:
+      - ifIndex
+      lookup: ifName
+      drop_source_indexes: false
+    overrides:
+      ifHCInOctets:
+        rename_to: network_interface_receive_bytes_total
+      ifHCOutOctets:
+        rename_to: network_interface_transmit_bytes_total
+      ifHCInUcastPkts:
+        rename_to: network_interface_receive_unicast_packets_total
+      ifHCOutUcastPkts:
+        rename_to: network_interface_transmit_unicast_packets_total
+      ifHCInMulticastPkts:
+        rename_to: network_interface_receive_multicast_packets_total
+      ifHCOutMulticastPkts:
+        rename_to: network_interface_transmit_multicast_packets_total
+      ifHCInBroadcastPkts:
+        rename_to: network_interface_receive_broadcast_packets_total
+      ifHCOutBroadcastPkts:
+        rename_to: network_interface_transmit_broadcast_packets_total
+      ifInErrors:
+        rename_to: network_interface_receive_errors_total
+      ifOutErrors:
+        rename_to: network_interface_transmit_errors_total
+      ifInDiscards:
+        rename_to: network_interface_receive_discards_total
+      ifOutDiscards:
+        rename_to: network_interface_transmit_discards_total
+      ifInUnknownProtos:
+        rename_to: network_interface_receive_unknown_protocol_packets_total
+      ifOutQLen:
+        rename_to: network_interface_transmit_queue_length_packets
+      ifHighSpeed:
+        rename_to: network_interface_speed_mbps
+      ifOperStatus:
+        rename_to: network_interface_oper_status
+      ifAdminStatus:
+        rename_to: network_interface_admin_status
+      ifLastChange:
+        rename_to: network_interface_last_change_seconds

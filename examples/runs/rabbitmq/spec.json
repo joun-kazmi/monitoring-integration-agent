@@ -1,0 +1,695 @@
+{
+  "service": "rabbitmq",
+  "kind": "python_exporter",
+  "endpoints": [
+    {
+      "url": "/api/overview",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "Default credentials guest/guest, usable only from localhost",
+      "response_format": "json",
+      "notes": "System-wide overview including message stats, queue totals, and object totals"
+    },
+    {
+      "url": "/api/queues",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "Default credentials guest/guest, usable only from localhost",
+      "response_format": "json",
+      "notes": "List of all queues across all vhosts"
+    },
+    {
+      "url": "/api/nodes",
+      "method": "GET",
+      "auth": "basic",
+      "auth_detail": "Default credentials guest/guest, usable only from localhost",
+      "response_format": "json",
+      "notes": "List of nodes in the cluster"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "rabbitmq_messages_published_total",
+      "type": "counter",
+      "help": "Total number of messages published to the broker, cluster-wide, as reported by the contacted node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response (e.g. rabbit@host).",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.message_stats.publish",
+      "required": false
+    },
+    {
+      "name": "rabbitmq_messages_delivered_total",
+      "type": "counter",
+      "help": "Total number of messages delivered to consumers in acknowledgement mode plus basic.get calls, cluster-wide.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.message_stats.deliver_get",
+      "required": false
+    },
+    {
+      "name": "rabbitmq_messages_acknowledged_total",
+      "type": "counter",
+      "help": "Total number of messages acknowledged by consumers, cluster-wide.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.message_stats.ack",
+      "required": false
+    },
+    {
+      "name": "rabbitmq_messages_confirmed_total",
+      "type": "counter",
+      "help": "Total number of messages confirmed by the broker to publishers, cluster-wide.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.message_stats.confirm",
+      "required": false
+    },
+    {
+      "name": "rabbitmq_cluster_messages",
+      "type": "gauge",
+      "help": "Total number of messages currently in all queues across the cluster (ready + unacknowledged).",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.queue_totals.messages",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_messages_ready",
+      "type": "gauge",
+      "help": "Total number of messages ready for delivery across all queues in the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.queue_totals.messages_ready",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_messages_unacknowledged",
+      "type": "gauge",
+      "help": "Total number of messages delivered but not yet acknowledged across all queues in the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.queue_totals.messages_unacknowledged",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_connections",
+      "type": "gauge",
+      "help": "Current number of client connections open across the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.object_totals.connections",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_channels",
+      "type": "gauge",
+      "help": "Current number of channels open across the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.object_totals.channels",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_exchanges",
+      "type": "gauge",
+      "help": "Current number of exchanges declared across the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.object_totals.exchanges",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_queues",
+      "type": "gauge",
+      "help": "Current number of queues declared across the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.object_totals.queues",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_cluster_consumers",
+      "type": "gauge",
+      "help": "Current number of consumers subscribed across the cluster.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node that served this overview response.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/overview -> $.object_totals.consumers",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_messages",
+      "type": "gauge",
+      "help": "Total number of messages currently in this queue (ready + unacknowledged).",
+      "unit": "",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].messages",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_messages_ready",
+      "type": "gauge",
+      "help": "Number of messages in this queue that are ready to be delivered to consumers.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].messages_ready",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_messages_unacknowledged",
+      "type": "gauge",
+      "help": "Number of messages in this queue delivered to consumers but not yet acknowledged.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].messages_unacknowledged",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_consumers",
+      "type": "gauge",
+      "help": "Number of consumers currently subscribed to this queue.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].consumers",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_memory_bytes",
+      "type": "gauge",
+      "help": "Bytes of memory used by the runtime process for this queue.",
+      "unit": "bytes",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].memory",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_queue_messages_published_total",
+      "type": "counter",
+      "help": "Total number of messages published to this queue since it was declared. Absent until the first publish occurs on the queue.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "queue",
+          "description": "Name of the queue.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "vhost",
+          "description": "Virtual host the queue belongs to.",
+          "allowed_values": null,
+          "required": true
+        },
+        {
+          "name": "state",
+          "description": "Current state of the queue as reported by the management API.",
+          "allowed_values": [
+            "running",
+            "idle",
+            "flow",
+            "down"
+          ],
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/queues -> $[*].message_stats.publish",
+      "required": false
+    },
+    {
+      "name": "rabbitmq_node_running",
+      "type": "gauge",
+      "help": "Whether this node is currently running, as reported by the cluster (1 = running, 0 = not running).",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node (e.g. rabbit@host).",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "source": "GET /api/nodes -> $[*].running",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_mem_used_bytes",
+      "type": "gauge",
+      "help": "Bytes of memory currently used by this node.",
+      "unit": "bytes",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].mem_used",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_fd_used",
+      "type": "gauge",
+      "help": "Number of file descriptors currently used by this node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].fd_used",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_fd_total",
+      "type": "gauge",
+      "help": "Total number of file descriptors available to this node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].fd_total",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_sockets_used",
+      "type": "gauge",
+      "help": "Number of network sockets currently used by this node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].sockets_used",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_sockets_total",
+      "type": "gauge",
+      "help": "Total number of network sockets available to this node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].sockets_total",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_processes_used",
+      "type": "gauge",
+      "help": "Number of Erlang processes currently used by this node.",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].proc_used",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_processes_total",
+      "type": "gauge",
+      "help": "Total number of Erlang processes available to this node (process limit).",
+      "unit": "",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].proc_total",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_uptime_milliseconds",
+      "type": "gauge",
+      "help": "Milliseconds since this node started. Not modeled as a counter because the value resets to zero on node restart rather than accumulating monotonically for the life of the exporter.",
+      "unit": "milliseconds",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].uptime",
+      "required": true
+    },
+    {
+      "name": "rabbitmq_node_disk_free_bytes",
+      "type": "gauge",
+      "help": "Bytes of free disk space available on the volume used by this node.",
+      "unit": "bytes",
+      "labels": [
+        {
+          "name": "node",
+          "description": "Name of the RabbitMQ node.",
+          "allowed_values": null,
+          "required": true
+        }
+      ],
+      "value": {
+        "min": 0.0,
+        "max": null
+      },
+      "source": "GET /api/nodes -> $[*].disk_free",
+      "required": true
+    }
+  ],
+  "notes": "All endpoints are served by the RabbitMQ management plugin (default port 15672) and use the same HTTP Basic credentials; paths are relative to that base URL. /api/overview reports cluster-wide aggregates and is labeled only with the responding node ('node'), since it does not break stats down per node itself. /api/queues and /api/nodes return arrays and are exploded into one series per element, carrying identifying labels (queue+vhost+state, or node) but never using high-cardinality or timestamp-like fields as labels. Per-queue and per-node 'message_stats'-derived counters are marked required=false because the management API omits the 'message_stats' object entirely until the relevant activity has occurred on that object. Node 'running' status is modeled as its own boolean gauge (rabbitmq_node_running) rather than as a label, since label values should describe dimensions, not point-in-time state. Node uptime is kept as a gauge despite being monotonic during a node's lifetime, because it resets on restart and does not fit the '_total' cumulative-counter convention."
+}
