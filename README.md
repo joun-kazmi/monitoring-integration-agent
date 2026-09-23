@@ -203,8 +203,11 @@ proven. The rest deserves an honest accounting:
   Petstore spec and rabbitmq.com's HTML reference.
 - **Auth: basic, bearer, API-key header and query-param tokens.** Each
   endpoint's IR `auth` scheme is honored by both the generated exporter and
-  the repair-stage probe; the token comes from `MIAGENT_TARGET_TOKEN`. Not
-  covered: OAuth2 flows (token acquisition/refresh), mTLS, request signing
+  the repair-stage probe; the token comes from `MIAGENT_TARGET_TOKEN`.
+  `auth=none` endpoints never get credentials, and credentials are only sent
+  to the `--target` origin (the probe refuses other hosts). Endpoints and
+  their auth come verbatim from the extraction stage; schema design can't
+  change them. Not covered: OAuth2 flows (token acquisition/refresh), mTLS, request signing
   (AWS SigV4 and friends), and cookie/session login.
 - **No pagination handling.** One GET per endpoint. A paginated collection
   would silently yield page 1 — and validation would *pass*, because the
@@ -225,7 +228,14 @@ proven. The rest deserves an honest accounting:
   workdir writable. Without bwrap it runs unsandboxed with a warning; set
   `MIAGENT_SANDBOX=bwrap` to make that an error. The network is **not**
   restricted in either case, and process count isn't capped. Treat docs you
-  feed it as code you'd run.
+  feed it as code you'd run. Two consequences worth stating plainly:
+  - Generated code holds the real target credentials and has network access,
+    so prompt-injected code could send them anywhere. Network allowlisting
+    (target only) is the prerequisite for any untrusted-docs or service mode,
+    ahead of further filesystem hardening.
+  - Read-only protects integrity, not confidentiality: host-readable files
+    outside the hidden trees (`/etc`, `/opt`, `/srv`, other mounts) remain
+    readable inside the sandbox.
 - **Trusted-operator tool, not a service.** Doc ingestion, endpoint probing
   and validation fetch whatever URLs they're given (ingestion follows
   redirects), from your machine's network position. That's intended for a
@@ -236,11 +246,15 @@ proven. The rest deserves an honest accounting:
 - **Repair sends live API responses to the LLM.** Up to 3 KB of each probed
   endpoint's body goes into the repair prompt, so with an API-backed LLM,
   target data leaves the machine. By default (`--live-samples redacted`)
-  bodies are labeled by path only, hostnames/IPs/URLs/emails/UUIDs/long
-  tokens and secret-named fields are masked, and lists are trimmed to 3
-  items. Plain identifiers such as queue names still pass through; use
-  `--live-samples off` if those are sensitive (repair then works from logs
-  alone), or `raw` to send bodies unmodified.
+  bodies get **best-effort pattern redaction, not a confidentiality
+  boundary**: labeled by path only; secret-named fields (`password`, `token`,
+  `api_key`, `cookie`, `auth`...) dropped whatever their type; host-named
+  fields (`host`, `node`, `peer`, `address`, `ip`...) masked; strings shaped
+  like URLs, emails, IPs, FQDNs, UUIDs or long tokens masked; lists trimmed
+  to 3 items. Anything else passes through, including queue names and hosts
+  in unexpected fields or formats. Use `--live-samples off` when target data
+  must not leave the machine (repair then works from logs alone), or `raw`
+  to send bodies unmodified.
 - **Target credentials travel by environment.** Prefer
   `MIAGENT_TARGET_USERNAME` / `MIAGENT_TARGET_PASSWORD` over `--username` /
   `--password` (argv is visible in `ps`). Generated exporters receive them the

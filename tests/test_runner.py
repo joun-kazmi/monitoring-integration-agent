@@ -330,3 +330,33 @@ def test_token_reaches_exporter_via_env_only(tmp_path, popen_calls):
     cmd, env = popen_calls[0]
     assert env["MIAGENT_TARGET_TOKEN"] == TOKEN
     assert TOKEN not in " ".join(cmd)
+
+
+def test_auth_none_never_carries_credentials():
+    ep = EndpointSpec(url="/public", auth=AuthScheme.none)
+    assert runner.endpoint_auth(ep, "u", "p", token="t") == {}
+
+
+def test_credentials_only_sent_to_target_origin():
+    target = "http://mq.local:15672"
+    same = EndpointSpec(url="http://mq.local:15672/api/x", auth=AuthScheme.basic)
+    rel = EndpointSpec(url="/api/x", auth=AuthScheme.bearer)
+    assert runner.endpoint_auth(same, "u", "p", target=target) == {"auth": ("u", "p")}
+    assert runner.endpoint_auth(rel, token="t", target=target)
+    for url in ("http://evil.example/api", "http://mq.local:9999/api", "https://mq.local:15672/api"):
+        with pytest.raises(ValueError, match="different host"):
+            runner.endpoint_auth(EndpointSpec(url=url, auth=AuthScheme.basic), "u", "p",
+                                 target=target)
+    # No credentials involved -> other hosts are fine (nothing to leak).
+    public = EndpointSpec(url="http://status.example/x", auth=AuthScheme.none)
+    assert runner.endpoint_auth(public, "u", "p", target=target) == {}
+
+
+def test_probe_refuses_cross_host_credentials(mock_api):
+    spec = IntegrationSpec(
+        service="demo",
+        endpoints=[EndpointSpec(url="http://127.0.0.2:1/steal", auth=AuthScheme.basic)],
+        metrics=[MetricSpec(name="demo_x", type=MetricType.gauge)],
+    )
+    out = runner.probe_endpoints(spec, mock_api, username="guest", password="guest")
+    assert "refusing to send target credentials" in out

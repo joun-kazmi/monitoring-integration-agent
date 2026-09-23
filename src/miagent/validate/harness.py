@@ -43,29 +43,45 @@ _INFRA_PREFIXES = (
 )
 
 
-def _cardinality_warnings(found: dict[str, object]) -> list[Failure]:
-    """Series-count budget per metric and in total (deterministic)."""
+_BUCKET_LABELS = ("le", "quantile")  # per-bucket/quantile, not per-entity
+
+
+def _cardinality_warnings(found: dict[str, object], families: dict[str, object]) -> list[Failure]:
+    """Series-count budgets (deterministic).
+
+    Per metric: distinct label sets, ignoring histogram ``le`` / summary
+    ``quantile``, i.e. how many entities the metric fans out over. Total:
+    every series actually emitted (buckets, _sum, _count, _created
+    included) across all non-infrastructure families in the scrape.
+    """
     out: list[Failure] = []
-    total = 0
     for metric_name, fam in found.items():
-        series = [s for s in fam.samples if s.name in (fam.name, fam.name + "_total")]
-        total += len(series)
-        if len(series) <= settings.max_series_per_metric:
+        labelsets = {
+            tuple(sorted((k, v) for k, v in smp.labels.items() if k not in _BUCKET_LABELS))
+            for smp in fam.samples
+        }
+        if len(labelsets) <= settings.max_series_per_metric:
             continue
         distinct: dict[str, set] = {}
-        for s in series:
-            for k, v in s.labels.items():
+        for ls in labelsets:
+            for k, v in ls:
                 distinct.setdefault(k, set()).add(v)
         worst = max(distinct.items(), key=lambda kv: len(kv[1]), default=None)
         driver = f"; most distinct values: {worst[0]!r} ({len(worst[1])})" if worst else ""
         out.append(Failure(
             kind=FailureKind.high_cardinality, metric=metric_name, severity="warning",
-            detail=f"{len(series)} series > budget {settings.max_series_per_metric}{driver}",
+            detail=f"{len(labelsets)} label sets > budget "
+                   f"{settings.max_series_per_metric}{driver}",
         ))
+    total = sum(
+        len({(smp.name, tuple(sorted(smp.labels.items()))) for smp in fam.samples})
+        for name, fam in families.items()
+        if not name.startswith(_INFRA_PREFIXES)
+    )
     if total > settings.max_series_total:
         out.append(Failure(
             kind=FailureKind.high_cardinality, severity="warning",
-            detail=f"{total} series across all metrics > budget {settings.max_series_total}",
+            detail=f"{total} series emitted in total > budget {settings.max_series_total}",
         ))
     return out
 
@@ -270,7 +286,7 @@ def validate_text(text: str, spec: IntegrationSpec, scrape_url: str = "") -> Val
         if name not in expected_family_names
         and not name.startswith(_INFRA_PREFIXES)
     )
-    warnings.extend(_cardinality_warnings(found_families))
+    warnings.extend(_cardinality_warnings(found_families, families))
     report.failures = failures
     report.warnings = warnings
     report.ok = not failures

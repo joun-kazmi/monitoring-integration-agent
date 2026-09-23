@@ -44,7 +44,10 @@ def design_schema(
     spec = router.structured(
         Stage.schema_design, prompt, IntegrationSpec, system=SYSTEM
     )
-    # Don't trust the model for these two fields — they're ours.
+    # Don't trust the model for these fields — they're ours. Endpoints (URLs
+    # and auth) come from stage 2 verbatim: metric design has no business
+    # changing where requests go or how they authenticate.
     spec.service = service
     spec.kind = kind
+    spec.endpoints = [ep.model_copy() for ep in surface.endpoints]
     return spec

@@ -7,8 +7,9 @@ matching identifying patterns are replaced with typed placeholders; values
 under secret-looking keys are dropped; long lists are trimmed. Non-JSON
 bodies get the same string patterns applied as text.
 
-Pattern-based by design, so plain identifiers (queue names, vhost names)
-pass through. Use ``--live-samples off`` when those are sensitive too.
+Best-effort, NOT a confidentiality boundary: it catches common shapes, and
+plain identifiers (queue names, vhost names) pass through by design. Use
+``--live-samples off`` when the target's data must not leave the machine.
 """
 
 from __future__ import annotations
@@ -19,7 +20,16 @@ from typing import Any
 
 MAX_LIST_ITEMS = 3
 
-_SECRET_KEY = re.compile(r"pass|secret|token|api_?key|auth|cookie|credential|private", re.I)
+# Value dropped whatever its type (string, number, list, object). Errs toward
+# dropping: a numeric field like `auth_failures` loses its value (key kept).
+_SECRET_KEY = re.compile(
+    r"passw|passphrase|^pass$|secret|token|api_?key|auth|cookie|credential|"
+    r"private_?key|session_?id", re.I)
+# String values masked even when they don't look like a hostname/IP
+# (single-label hosts like "prod-db-01" evade the patterns below).
+_HOST_KEY = re.compile(
+    r"^(?:.*_)?(?:host|hostname|fqdn|node|server|peer|address|addr|ip|ipv4|ipv6|"
+    r"cluster_name|domain)(?:es|s)?(?:_.*)?$", re.I)
 
 # Order matters: most specific first.
 _PATTERNS: list[tuple[re.Pattern[str], str]] = [
@@ -41,11 +51,17 @@ def redact_text(text: str) -> str:
 
 def _walk(value: Any, notes: list[str], path: str) -> Any:
     if isinstance(value, dict):
-        return {
-            k: "<redacted>" if _SECRET_KEY.search(k) and isinstance(v, str)
-            else _walk(v, notes, f"{path}.{k}")
-            for k, v in value.items()
-        }
+        out = {}
+        for k, v in value.items():
+            if _SECRET_KEY.search(k):
+                out[k] = "<redacted>"
+            elif _HOST_KEY.match(k) and isinstance(v, str):
+                out[k] = "<host>"
+            elif _HOST_KEY.match(k) and isinstance(v, list) and all(isinstance(i, str) for i in v):
+                out[k] = ["<host>"] * min(len(v), MAX_LIST_ITEMS)
+            else:
+                out[k] = _walk(v, notes, f"{path}.{k}")
+        return out
     if isinstance(value, list):
         if len(value) > MAX_LIST_ITEMS:
             notes.append(f"{path or '$'}: {len(value)} items, first {MAX_LIST_ITEMS} shown")

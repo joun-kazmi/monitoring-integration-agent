@@ -181,8 +181,9 @@ def main(argv: list[str] | None = None) -> int:
                             "(OpenAPI, HTML, markdown, plain text)")
     p_gen.add_argument("--target", required=True, help="base URL of the live API")
     p_gen.add_argument("--workdir", default="./build")
-    p_gen.add_argument("--kind", default="python_exporter",
-                       choices=["python_exporter", "otel", "snmp_generator"])
+    # Only kinds that exist. SNMP has its own command (generate-snmp); OTel is
+    # roadmap — add it here when run_pipeline supports it.
+    p_gen.add_argument("--kind", default="python_exporter", choices=["python_exporter"])
     p_gen.add_argument("--port", type=int, default=9464)
     _add_target_auth_args(p_gen)
     p_gen.set_defaults(func=_cmd_generate)

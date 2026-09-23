@@ -57,26 +57,47 @@ ENV_TARGET_TOKEN = "MIAGENT_TARGET_TOKEN"  # bearer / header / query schemes
 _HEADER_NAME_RE = re.compile(r"^[A-Za-z0-9!#$%&'*+.^_`|~-]+$")
 
 
+def _origin(url: str) -> tuple[str, str, int]:
+    u = httpx.URL(url)
+    return (u.scheme, u.host, u.port or {"http": 80, "https": 443}.get(u.scheme, 0))
+
+
+def endpoint_url(ep: EndpointSpec, target: str) -> str:
+    if ep.url.startswith(("http://", "https://")):
+        return ep.url
+    return target.rstrip("/") + "/" + ep.url.lstrip("/")
+
+
 def endpoint_auth(ep: EndpointSpec, username: str = "", password: str = "",
-                  token: str = "") -> dict:
+                  token: str = "", target: str = "") -> dict:
     """httpx request kwargs implementing ``ep.auth`` (deterministic).
 
-    Raises ValueError when a header/query scheme lacks a usable name.
+    ``none`` never carries credentials; ``basic`` is the only scheme that
+    uses username/password. When ``target`` is given, credentials are only
+    ever sent to the target's origin: an absolute endpoint URL on another
+    host raises ValueError instead. Also raises ValueError when a
+    header/query scheme lacks a usable name.
     """
     scheme = ep.auth
-    if scheme in (AuthScheme.basic, AuthScheme.none):
-        return {"auth": (username, password)} if username or password else {}
-    if not token:
+    if scheme is AuthScheme.none:
         return {}
-    if scheme is AuthScheme.bearer:
-        return {"headers": {"Authorization": f"Bearer {token}"}}
-    name = ep.auth_detail.strip()
-    if not _HEADER_NAME_RE.match(name):
-        raise ValueError(f"auth={scheme.value} needs a bare header/param name in "
-                         f"auth_detail, got {ep.auth_detail!r}")
-    if scheme is AuthScheme.header:
-        return {"headers": {name: token}}
-    return {"params": {name: token}}
+    if scheme is AuthScheme.basic:
+        kwargs = {"auth": (username, password)} if username or password else {}
+    elif not token:
+        kwargs = {}
+    elif scheme is AuthScheme.bearer:
+        kwargs = {"headers": {"Authorization": f"Bearer {token}"}}
+    else:
+        name = ep.auth_detail.strip()
+        if not _HEADER_NAME_RE.match(name):
+            raise ValueError(f"auth={scheme.value} needs a bare header/param name in "
+                             f"auth_detail, got {ep.auth_detail!r}")
+        kwargs = ({"headers": {name: token}} if scheme is AuthScheme.header
+                  else {"params": {name: token}})
+    if kwargs and target and _origin(endpoint_url(ep, target)) != _origin(target):
+        raise ValueError("refusing to send target credentials to a different host "
+                         f"than --target ({httpx.URL(ep.url).host})")
+    return kwargs
 
 
 def scrubbed_env(extra: Optional[dict[str, str]] = None) -> dict[str, str]:
@@ -185,10 +206,10 @@ def probe_endpoints(
 
     chunks = []
     for ep in spec.endpoints:
-        url = ep.url if ep.url.startswith("http") else target.rstrip("/") + "/" + ep.url.lstrip("/")
+        url = endpoint_url(ep, target)
         label = httpx.URL(url).raw_path.decode() if redact else url
         try:
-            kwargs = endpoint_auth(ep, username, password, token)
+            kwargs = endpoint_auth(ep, username, password, token, target=target)
             r = httpx.get(url, timeout=settings.scrape_timeout_s, **kwargs)
             body = redact_body(r.text) if redact else r.text
             chunks.append(f"### GET {label} -> HTTP {r.status_code}\n{clean(body)[:max_bytes]}")

@@ -34,8 +34,10 @@ Hard requirements:
     bearer -> header `Authorization: Bearer <token>`
     header -> header named exactly `auth_detail`, value = token
     query  -> query parameter named exactly `auth_detail`, value = token
-    none   -> no auth, unless username/password are set (then basic)
-  Never log the token or full request URLs that contain it.
+    none   -> no auth at all, even if credentials are set
+  Send credentials ONLY to the --target host: never attach them to an
+  absolute endpoint URL on a different host. Never log the token or full
+  request URLs that contain it.
 - Python 3.10, only stdlib + `prometheus_client` + `httpx` (both installed).
   Do NOT import `requests` — it is not installed.
 - Implement a custom prometheus_client Collector class (registered on a

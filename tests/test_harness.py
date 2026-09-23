@@ -165,7 +165,7 @@ def test_cardinality_over_budget_warns_but_passes(monkeypatch):
     assert report.ok
     [w] = [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
     assert w.metric == "demo_queue_depth"
-    assert "5 series" in w.detail and "'queue' (5)" in w.detail
+    assert "5 label sets" in w.detail and "'queue' (5)" in w.detail
 
 
 def test_cardinality_total_budget(monkeypatch):
@@ -178,4 +178,57 @@ def test_cardinality_total_budget(monkeypatch):
 
 def test_cardinality_within_budget_is_silent():
     report = validate_text(_gauge_series(5), _depth_only_spec())
+    assert not [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
+
+
+def _histogram(n_entities: int) -> str:
+    lines = ["# TYPE demo_latency_seconds histogram"]
+    for i in range(n_entities):
+        for le in ("0.1", "1", "+Inf"):
+            lines.append(f'demo_latency_seconds_bucket{{queue="q{i}",le="{le}"}} 1')
+        lines.append(f'demo_latency_seconds_sum{{queue="q{i}"}} 0.5')
+        lines.append(f'demo_latency_seconds_count{{queue="q{i}"}} 1')
+    return "\n".join(lines) + "\n"
+
+
+def _histogram_spec():
+    return IntegrationSpec(service="demo", metrics=[
+        MetricSpec(name="demo_latency_seconds", type=MetricType.histogram),
+    ])
+
+
+def test_cardinality_counts_histogram_entities_not_zero(monkeypatch):
+    from miagent.config import settings
+    monkeypatch.setattr(settings, "max_series_per_metric", 3)
+    report = validate_text(_histogram(4), _histogram_spec())
+    [w] = [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
+    # 4 queues, not 4 x 5 samples: le is per-bucket, not per-entity
+    assert "4 label sets" in w.detail and "'queue' (4)" in w.detail
+
+
+def test_cardinality_total_counts_every_emitted_series(monkeypatch):
+    from miagent.config import settings
+    # 2 queues x (3 buckets + sum + count) = 10 real series
+    monkeypatch.setattr(settings, "max_series_total", 9)
+    report = validate_text(_histogram(2), _histogram_spec())
+    assert any("10 series emitted" in w.detail for w in report.warnings)
+    monkeypatch.setattr(settings, "max_series_total", 10)
+    report = validate_text(_histogram(2), _histogram_spec())
+    assert not [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
+
+
+def test_cardinality_summary_quantiles_are_not_entities(monkeypatch):
+    from miagent.config import settings
+    monkeypatch.setattr(settings, "max_series_per_metric", 1)
+    text = (
+        "# TYPE demo_rpc_seconds summary\n"
+        'demo_rpc_seconds{quantile="0.5"} 0.1\n'
+        'demo_rpc_seconds{quantile="0.99"} 0.9\n'
+        "demo_rpc_seconds_sum 5\n"
+        "demo_rpc_seconds_count 10\n"
+    )
+    spec = IntegrationSpec(service="demo", metrics=[
+        MetricSpec(name="demo_rpc_seconds", type=MetricType.summary),
+    ])
+    report = validate_text(text, spec)
     assert not [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
