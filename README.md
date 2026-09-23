@@ -151,9 +151,10 @@ PYTHONPATH=src python3 -m miagent.cli llm-smoke
 
 # start a stand-in RabbitMQ management API, then generate against it
 python3 examples/rabbitmq/mock_server.py 15672 &
+MIAGENT_TARGET_USERNAME=guest MIAGENT_TARGET_PASSWORD=guest \
 PYTHONPATH=src python3 -m miagent.cli generate \
     --service rabbitmq --docs examples/rabbitmq/docs.md \
-    --target http://127.0.0.1:15672 --username guest --password guest \
+    --target http://127.0.0.1:15672 \
     --workdir build/rabbitmq
 
 # render that run as a self-contained HTML report
@@ -201,7 +202,7 @@ proven. The rest deserves an honest accounting:
   *ingestion* has been exercised on genuinely foreign input: the live Swagger
   Petstore spec and rabbitmq.com's HTML reference.
 - **Auth beyond HTTP basic is a real gap.** The IR can express bearer, header
-  and query schemes, but the runner only passes `--username/--password`, so a
+  and query schemes, but the runner only supplies basic-auth credentials, so a
   token-authed API fails with no repair path. This is the next thing worth
   fixing.
 - **No pagination handling.** One GET per endpoint. A paginated collection
@@ -219,7 +220,16 @@ proven. The rest deserves an honest accounting:
   the roadmap.
 - **Repair sends live API responses to the LLM.** Up to 3 KB of each probed
   endpoint's body goes into the repair prompt, so with an API-backed LLM,
-  target data leaves the machine.
+  target data leaves the machine. By default (`--live-samples redacted`)
+  bodies are labeled by path only, hostnames/IPs/URLs/emails/UUIDs/long
+  tokens and secret-named fields are masked, and lists are trimmed to 3
+  items. Plain identifiers such as queue names still pass through; use
+  `--live-samples off` if those are sensitive (repair then works from logs
+  alone), or `raw` to send bodies unmodified.
+- **Target credentials travel by environment.** Prefer
+  `MIAGENT_TARGET_USERNAME` / `MIAGENT_TARGET_PASSWORD` over `--username` /
+  `--password` (argv is visible in `ps`). Generated exporters receive them the
+  same way and never on their command line.
 
 [`docs/HANDOFF.md`](docs/HANDOFF.md) has the full roadmap, including the two
 substantial items not yet built: the **OTel collector path** (declarative config

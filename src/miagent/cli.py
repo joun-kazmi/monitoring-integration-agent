@@ -8,11 +8,23 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
 from miagent.ir import IntegrationSpec
 from miagent.llm.router import Stage
+
+
+def _add_target_auth_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--username", default=os.environ.get("MIAGENT_TARGET_USERNAME", ""),
+                   help="target basic-auth user (default $MIAGENT_TARGET_USERNAME)")
+    p.add_argument("--password", default=os.environ.get("MIAGENT_TARGET_PASSWORD", ""),
+                   help="target basic-auth password (default $MIAGENT_TARGET_PASSWORD; "
+                        "prefer the env var — argv is visible in ps)")
+    p.add_argument("--live-samples", default="redacted", choices=["redacted", "raw", "off"],
+                   help="what repair may send to the LLM from live target responses: "
+                        "redacted (default; hosts/IPs/emails/tokens masked), raw, or off")
 
 
 def _cmd_validate(args: argparse.Namespace) -> int:
@@ -53,6 +65,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         port=args.port,
         username=args.username,
         password=args.password,
+        live_samples=args.live_samples,
     )
     print(f"\n{'SUCCESS' if result.ok else 'FAILED'} in {result.elapsed_s:.0f}s, "
           f"{result.iterations} repair iteration(s)")
@@ -130,6 +143,7 @@ def _cmd_repair(args: argparse.Namespace) -> int:
         port=args.port,
         username=args.username,
         password=args.password,
+        live_samples=args.live_samples,
     )
     print(f"\n{'SUCCESS' if result.ok else 'FAILED'} in {result.elapsed_s:.0f}s, "
           f"{result.iterations} repair iteration(s)")
@@ -165,8 +179,7 @@ def main(argv: list[str] | None = None) -> int:
     p_gen.add_argument("--kind", default="python_exporter",
                        choices=["python_exporter", "otel", "snmp_generator"])
     p_gen.add_argument("--port", type=int, default=9464)
-    p_gen.add_argument("--username", default="")
-    p_gen.add_argument("--password", default="")
+    _add_target_auth_args(p_gen)
     p_gen.set_defaults(func=_cmd_generate)
 
     p_rep_html = sub.add_parser("report",
@@ -209,8 +222,7 @@ def main(argv: list[str] | None = None) -> int:
     p_rep.add_argument("--target", required=True, help="base URL of the live API")
     p_rep.add_argument("--workdir", default="./build")
     p_rep.add_argument("--port", type=int, default=9464)
-    p_rep.add_argument("--username", default="")
-    p_rep.add_argument("--password", default="")
+    _add_target_auth_args(p_rep)
     p_rep.set_defaults(func=_cmd_repair)
 
     args = parser.parse_args(argv)

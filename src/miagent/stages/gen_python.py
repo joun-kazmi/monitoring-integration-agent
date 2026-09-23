@@ -4,7 +4,9 @@ and stage 6 — repair.
 The generated file must honor a fixed CLI contract so the runner can launch
 it deterministically:
 
-    python exporter.py --port PORT --target BASE_URL [--username U] [--password P]
+    python exporter.py --port PORT --target BASE_URL
+
+Basic-auth credentials come from MIAGENT_TARGET_USERNAME / MIAGENT_TARGET_PASSWORD.
 """
 
 from __future__ import annotations
@@ -20,9 +22,13 @@ _CODE_RE = re.compile(r"```(?:python)?\s*\n(.*?)```", re.DOTALL)
 
 CONTRACT = """\
 The exporter is a single Python file with this exact CLI contract:
-  python exporter.py --port PORT --target BASE_URL [--username U] [--password P]
+  python exporter.py --port PORT --target BASE_URL
 
 Hard requirements:
+- Basic-auth credentials come ONLY from the environment variables
+  MIAGENT_TARGET_USERNAME and MIAGENT_TARGET_PASSWORD (use basic auth if
+  either is set). Do NOT add --username/--password flags: argv is visible
+  to other users on the host.
 - Python 3.10, only stdlib + `prometheus_client` + `httpx` (both installed).
   Do NOT import `requests` — it is not installed.
 - Implement a custom prometheus_client Collector class (registered on a
@@ -36,7 +42,7 @@ Hard requirements:
   forever (e.g. while True: time.sleep(...)).
 - HTTP errors from the target must not crash the process: log to stderr
   and skip that scrape (expose what you can).
-- Use an httpx timeout of 5 seconds. Basic auth from --username/--password.
+- Use an httpx timeout of 5 seconds.
 - No placeholder code, no TODOs — complete and runnable."""
 
 SYSTEM_GEN = (

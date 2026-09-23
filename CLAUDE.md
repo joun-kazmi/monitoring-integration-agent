@@ -33,9 +33,10 @@ roadmap with per-item implementation guidance and the environment gotchas.
 PYTHONPATH=src python3 -m pytest tests/ -q          # tests (all must pass)
 PYTHONPATH=src python3 -m miagent.cli llm-smoke        # verify LLM backend
 python3 examples/rabbitmq/mock_server.py 15672 &     # mock target (add --break to break it)
+MIAGENT_TARGET_USERNAME=guest MIAGENT_TARGET_PASSWORD=guest \
 PYTHONPATH=src python3 -m miagent.cli generate \
   --service rabbitmq --docs examples/rabbitmq/docs.md \
-  --target http://127.0.0.1:15672 --username guest --password guest \
+  --target http://127.0.0.1:15672 \
   --workdir build/rabbitmq
 ```
 

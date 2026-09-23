@@ -62,6 +62,7 @@ def validate_and_repair(
     port: int = 9464,
     username: str = "",
     password: str = "",
+    live_samples: str = "redacted",
 ) -> tuple[Optional[ValidationReport], int]:
     """Run/validate the artifact; on failure, repair with escalation until
     pass or budget exhaustion. Returns (final report, repair iterations)."""
@@ -85,7 +86,14 @@ def validate_and_repair(
             break
         tier = router.tier_for(Stage.repair, repair_iteration=iteration - 1)
         _log(f"stage 6: probing live endpoints + repair (iteration {iteration}, tier={tier.value})")
-        samples = probe_endpoints(spec, target, username=username, password=password)
+        samples = (
+            ""
+            if live_samples == "off"
+            else probe_endpoints(
+                spec, target, username=username, password=password,
+                redact=live_samples != "raw",
+            )
+        )
         code = repair_python_exporter(
             router, spec, code, report, result.process_log, iteration - 1,
             endpoint_samples=samples,
@@ -104,6 +112,7 @@ def run_pipeline(
     username: str = "",
     password: str = "",
     router: Optional[LLMRouter] = None,
+    live_samples: str = "redacted",
 ) -> PipelineResult:
     t0 = time.monotonic()
     router = router or LLMRouter()
@@ -138,6 +147,7 @@ def run_pipeline(
     report, iterations = validate_and_repair(
         router, spec, code_path, target, workdir,
         port=port, username=username, password=password,
+        live_samples=live_samples,
     )
 
     usage = _usage_dict(router)
@@ -275,6 +285,7 @@ def run_repair(
     username: str = "",
     password: str = "",
     router: Optional[LLMRouter] = None,
+    live_samples: str = "redacted",
 ) -> PipelineResult:
     """Fleet-refresh entry: re-validate an existing artifact, repair on failure.
 
@@ -294,6 +305,7 @@ def run_repair(
     report, iterations = validate_and_repair(
         router, spec, work_path, target, workdir,
         port=port, username=username, password=password,
+        live_samples=live_samples,
     )
 
     ok = bool(report and report.ok)
