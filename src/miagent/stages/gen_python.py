@@ -23,7 +23,8 @@ The exporter is a single Python file with this exact CLI contract:
   python exporter.py --port PORT --target BASE_URL [--username U] [--password P]
 
 Hard requirements:
-- Python 3.10, only stdlib + `prometheus_client` + `requests` (both installed).
+- Python 3.10, only stdlib + `prometheus_client` + `httpx` (both installed).
+  Do NOT import `requests` — it is not installed.
 - Implement a custom prometheus_client Collector class (registered on a
   fresh CollectorRegistry or the default REGISTRY) that polls the target
   API on every collect() call. Use CounterMetricFamily for counters and
@@ -35,7 +36,7 @@ Hard requirements:
   forever (e.g. while True: time.sleep(...)).
 - HTTP errors from the target must not crash the process: log to stderr
   and skip that scrape (expose what you can).
-- Use a requests timeout of 5 seconds. Basic auth from --username/--password.
+- Use an httpx timeout of 5 seconds. Basic auth from --username/--password.
 - No placeholder code, no TODOs — complete and runnable."""
 
 SYSTEM_GEN = (

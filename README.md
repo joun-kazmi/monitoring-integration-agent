@@ -1,7 +1,7 @@
 # monitoring-integration-agent
 
-> An agent that writes Prometheus exporters and SNMP/OTel collector configs from
-> API documentation — then **proves they work by running them** and diffing the
+> An agent that writes Prometheus exporters and `snmp_exporter` configs from API
+> documentation and MIBs — then **proves they work by running them** and diffing the
 > scraped metrics against a machine-checkable spec.
 
 [![tests](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml)
@@ -211,6 +211,15 @@ proven. The rest deserves an honest accounting:
 - **No cardinality guard.** Three mock queues are fine; 50,000 real ones would
   emit 50,000 series unremarked.
 - **SNMP v2c only**, one module per run.
+- **Generated code is not sandboxed.** The REST path runs LLM-written Python
+  as your user. The runner drops inherited environment variables (API keys,
+  cloud credentials), sets the workdir as cwd, and caps CPU time and memory,
+  but the code can still read your files and reach your network. Treat
+  docs you feed it as code you'd run. Container or namespace isolation is on
+  the roadmap.
+- **Repair sends live API responses to the LLM.** Up to 3 KB of each probed
+  endpoint's body goes into the repair prompt, so with an API-backed LLM,
+  target data leaves the machine.
 
 [`docs/HANDOFF.md`](docs/HANDOFF.md) has the full roadmap, including the two
 substantial items not yet built: the **OTel collector path** (declarative config

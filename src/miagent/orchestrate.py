@@ -10,6 +10,8 @@ flow: re-validate a previously passing integration, repair only on failure.
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -274,23 +276,39 @@ def run_repair(
     password: str = "",
     router: Optional[LLMRouter] = None,
 ) -> PipelineResult:
-    """Fleet-refresh entry: re-validate an existing artifact, repair on failure."""
+    """Fleet-refresh entry: re-validate an existing artifact, repair on failure.
+
+    The caller's file is never edited in place: repair iterates on a copy in
+    ``workdir`` and the original is replaced (atomically) only on PASS. On
+    failure the original is untouched and the last attempt stays in workdir.
+    """
     t0 = time.monotonic()
     router = router or LLMRouter()
     workdir.mkdir(parents=True, exist_ok=True)
     spec = IntegrationSpec.model_validate_json(spec_path.read_text())
 
+    work_path = workdir / "exporter.py"
+    if work_path.resolve() != code_path.resolve():
+        shutil.copyfile(code_path, work_path)
+
     report, iterations = validate_and_repair(
-        router, spec, code_path, target, workdir,
+        router, spec, work_path, target, workdir,
         port=port, username=username, password=password,
     )
+
+    ok = bool(report and report.ok)
+    if ok and iterations > 0 and work_path.resolve() != code_path.resolve():
+        tmp = code_path.with_name(code_path.name + ".miagent-tmp")
+        shutil.copyfile(work_path, tmp)
+        shutil.copymode(code_path, tmp)
+        os.replace(tmp, code_path)
 
     usage = _usage_dict(router)
     (workdir / "usage.json").write_text(json.dumps(usage, indent=2))
     return PipelineResult(
-        ok=bool(report and report.ok),
+        ok=ok,
         spec=spec,
-        artifact_path=code_path,
+        artifact_path=code_path if ok else work_path,
         report=report,
         iterations=iterations,
         usage=usage,

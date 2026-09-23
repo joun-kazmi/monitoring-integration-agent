@@ -1,13 +1,21 @@
-"""Sandboxed execution of a generated Python exporter (part of stage 5).
+"""Execution of a generated Python exporter (part of stage 5).
 
 Deterministic: static-check the file, launch it, wait for /metrics to come
 up, hand off to the validation harness, kill the process, and return the
 report plus captured logs for the repair stage.
+
+NOT a sandbox. The exporter is LLM-generated code and runs as the current
+user. Mitigations only: the child gets a scrubbed environment (no API keys
+or cloud credentials inherited), runs with the workdir as cwd, and is
+bounded by CPU-time and memory rlimits. A real isolation boundary
+(container or namespace sandbox) is roadmap work.
 """
 
 from __future__ import annotations
 
+import os
 import py_compile
+import resource
 import subprocess
 import sys
 import time
@@ -21,6 +29,29 @@ from miagent.config import settings
 from miagent.ir import IntegrationSpec
 from miagent.validate.harness import validate_scrape
 from miagent.validate.report import Failure, FailureKind, ValidationReport
+
+
+# Environment variables the child is allowed to inherit. Everything else
+# (ANTHROPIC_API_KEY, AWS_*, GITHUB_TOKEN, ...) is dropped.
+_ENV_ALLOWLIST = ("PATH", "LANG", "LC_ALL", "TZ", "PYTHONPATH", "SYSTEMROOT")
+
+# Resource ceilings for generated exporters.
+_RLIMIT_CPU_S = 60
+_RLIMIT_AS_BYTES = 1024 * 1024 * 1024  # 1 GiB address space
+# No RLIMIT_NPROC: it counts every process/thread the *user* owns, so any
+# fixed ceiling breaks on a busy desktop. Fork bombs need a real sandbox.
+
+
+def scrubbed_env(extra: Optional[dict[str, str]] = None) -> dict[str, str]:
+    env = {k: os.environ[k] for k in _ENV_ALLOWLIST if k in os.environ}
+    env.update(extra or {})
+    return env
+
+
+def _limit_resources() -> None:
+    """preexec_fn for generated code: cap CPU time and address space."""
+    resource.setrlimit(resource.RLIMIT_CPU, (_RLIMIT_CPU_S, _RLIMIT_CPU_S))
+    resource.setrlimit(resource.RLIMIT_AS, (_RLIMIT_AS_BYTES, _RLIMIT_AS_BYTES))
 
 
 @dataclass
@@ -86,15 +117,26 @@ def run_process_and_validate(
     spec: IntegrationSpec,
     log_path: Path,
     settle_s: float = 1.0,
+    untrusted: bool = False,
 ) -> RunResult:
     """Launch a long-running artifact, scrape it once, tear it down.
 
     Shared by every artifact kind (python exporter, snmp_exporter, and any
     future collector): the only things that differ per kind are the command
-    and the metrics URL.
+    and the metrics URL. Every child gets a scrubbed environment;
+    ``untrusted=True`` (LLM-written code) additionally runs it from the log's
+    directory under rlimits.
     """
     with open(log_path, "w") as log_file:
-        proc = subprocess.Popen(cmd, stdout=log_file, stderr=subprocess.STDOUT, text=True)
+        proc = subprocess.Popen(
+            cmd,
+            stdout=log_file,
+            stderr=subprocess.STDOUT,
+            text=True,
+            env=scrubbed_env(),
+            cwd=str(log_path.parent) if untrusted else None,
+            preexec_fn=_limit_resources if untrusted else None,
+        )
         try:
             err = _wait_for_metrics(metrics_url, proc)
             if err:
@@ -139,7 +181,7 @@ def run_and_validate(
             process_log="",
         )
 
-    cmd = [sys.executable, str(code_path), "--port", str(port), "--target", target]
+    cmd = [sys.executable, str(code_path.resolve()), "--port", str(port), "--target", target]
     if username:
         cmd += ["--username", username]
     if password:
@@ -151,4 +193,5 @@ def run_and_validate(
         spec,
         log_path,
         settle_s=settle_s,
+        untrusted=True,
     )
