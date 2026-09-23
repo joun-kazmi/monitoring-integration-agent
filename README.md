@@ -1,8 +1,11 @@
 # monitoring-integration-agent
 
-> An agent that writes Prometheus exporters and `snmp_exporter` configs from API
-> documentation and MIBs — then **proves they work by running them** and diffing the
-> scraped metrics against a machine-checkable spec.
+### Monitoring integrations that verify themselves.
+
+**An AI agent that builds monitoring integrations — then proves they actually
+work.** Point it at an API's documentation or a network device's MIB. It writes
+the integration, runs it against the real system, and checks every metric
+against a spec. No manual testing, and no AI grading its own homework.
 
 [![tests](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -12,6 +15,64 @@
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/report-hero-dark.png">
   <img alt="Run report showing PASS 28/28 metrics verified, the pipeline's per-stage model tiers, and the expected-vs-observed metric diff" src="docs/img/report-hero-light.png">
 </picture>
+
+## Why it matters
+
+Every operations team runs dozens to hundreds of **monitoring integrations**:
+small programs that pull numbers out of message queues, databases, switches and
+APIs so dashboards and alerts have something to show. Writing them is tedious.
+Keeping them working as vendors change their APIs is worse, and when they break,
+they break *silently*: the dashboard just goes empty.
+
+AI can write this code in minutes, but it can't tell you whether what it wrote
+is right. This project closes that gap:
+
+- **It checks its own work, without asking an AI.** Every integration is run
+  for real and its output compared, metric by metric, against a spec. Pass or
+  fail is decided by code, never by a model's opinion.
+- **It fixes itself.** When a check fails, the agent is told exactly what's
+  wrong, plus fresh evidence from the live system, and tries again. It
+  escalates to a stronger model only when cheaper attempts fail.
+- **Checking is free.** Validation spends zero AI tokens, so a whole catalog of
+  integrations can be re-verified on a schedule, and AI is only paid for when
+  something actually broke.
+- **It's careful with what it runs.** AI-written code never sees your API
+  keys, runs sandboxed away from your home directory (on Linux, via
+  bubblewrap), and live data sent to the model is redacted first.
+
+**By the numbers**
+
+- **28/28** metrics verified on the first try for a RabbitMQ integration, in 3
+  model calls and under 2 minutes
+- **1** model call to recover from a breaking upstream API change
+- **1** model call for an entire network-device (SNMP) integration
+- **0** tokens spent on validation, on every run
+- **80+** automated tests in CI, running inside the same sandbox as generated code
+
+**Engineering highlights**
+
+- Machine-checkable intermediate representation (IR) shared by generation and
+  validation, so the two can't drift apart
+- Bounded self-repair loop, escalating to a stronger model only when cheaper
+  attempts fail
+- Deterministic SNMP compiler: one model selection produces both the
+  configuration and its validation expectations
+- Multi-provider LLM routing across Claude CLI, Anthropic API and
+  OpenAI-compatible backends
+- Sandboxed execution of generated Python (bubblewrap), with scrubbed
+  environments and resource limits
+- Credential-aware auth for Basic, Bearer, API-key headers and query
+  parameters, scoped to the target host
+- Cardinality checks, redacted repair evidence, reproducible reports, and CI
+
+Designed so that model judgment is used where judgment helps, and
+deterministic code is used everywhere correctness can be checked.
+
+**Built with:** Python · Prometheus · SNMP · multi-model LLM orchestration
+(Claude Haiku / Sonnet / Opus, or any OpenAI-compatible API) · bubblewrap
+sandboxing · GitHub Actions
+
+## The engineering idea
 
 Writing a monitoring integration is mostly a translation problem: read an API's
 docs or a device's MIB, decide which fields are worth recording, name them to
@@ -31,8 +92,10 @@ nothing.
 
 ## Results
 
-Five real runs, all verified against live endpoints. Every artifact and
-validation report is committed under [`examples/runs/`](examples/runs).
+Five real runs, each verified by running the result against a live endpoint (a
+RabbitMQ API stand-in and simulated SNMP devices; see
+[what's proven](#whats-proven-and-what-isnt)). Every artifact and validation
+report is committed under [`examples/runs/`](examples/runs).
 
 | Scenario | Result | Repairs | Model calls | Tokens | Report |
 |---|---|---|---|---|---|
