@@ -212,12 +212,22 @@ proven. The rest deserves an honest accounting:
 - **No cardinality guard.** Three mock queues are fine; 50,000 real ones would
   emit 50,000 series unremarked.
 - **SNMP v2c only**, one module per run.
-- **Generated code is not sandboxed.** The REST path runs LLM-written Python
-  as your user. The runner drops inherited environment variables (API keys,
-  cloud credentials), sets the workdir as cwd, and caps CPU time and memory,
-  but the code can still read your files and reach your network. Treat
-  docs you feed it as code you'd run. Container or namespace isolation is on
-  the roadmap.
+- **Generated code is sandboxed for files, not for network.** The REST path
+  runs LLM-written Python with a scrubbed environment (no API keys or cloud
+  credentials) and CPU/memory limits. With [bubblewrap](https://github.com/containers/bubblewrap)
+  installed (`MIAGENT_SANDBOX=auto`, the default), it also runs with a read-only
+  filesystem, home directories, `/tmp` and `/run/user` hidden, and only its
+  workdir writable. Without bwrap it runs unsandboxed with a warning; set
+  `MIAGENT_SANDBOX=bwrap` to make that an error. The network is **not**
+  restricted in either case, and process count isn't capped. Treat docs you
+  feed it as code you'd run.
+- **Trusted-operator tool, not a service.** Doc ingestion, endpoint probing
+  and validation fetch whatever URLs they're given (ingestion follows
+  redirects), from your machine's network position. That's intended for a
+  local CLI. Before exposing it to other callers (API, bot, CI on untrusted
+  PRs), add a central URL policy that blocks loopback, link-local/metadata
+  (169.254.0.0/16) and private ranges, re-checked after each redirect, or
+  it becomes an SSRF proxy.
 - **Repair sends live API responses to the LLM.** Up to 3 KB of each probed
   endpoint's body goes into the repair prompt, so with an API-backed LLM,
   target data leaves the machine. By default (`--live-samples redacted`)

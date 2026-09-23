@@ -39,6 +39,10 @@ class Settings(BaseSettings):
     # Doc ingestion
     docs_max_chars: int = 80_000
 
+    # Isolation for LLM-generated exporters: auto (bwrap if it works, else
+    # unsandboxed with a warning) | bwrap (required) | off
+    sandbox: str = "auto"
+
     # Validation harness
     scrape_timeout_s: float = 10.0
     promtool_path: str = "promtool"

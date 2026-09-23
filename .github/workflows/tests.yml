@@ -26,7 +26,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
+      # Exercise the bwrap sandbox for generated code. Ubuntu 24.04 runners
+      # block unprivileged user namespaces via AppArmor by default.
+      - name: Enable bwrap sandbox
+        run: |
+          sudo apt-get install -y -qq bubblewrap
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
       - name: Tests
+        env:
+          MIAGENT_SANDBOX: bwrap  # fail, don't silently fall back
         run: pytest tests/ -q
 
       # The committed run reports are generated from the committed run records.

@@ -58,6 +58,8 @@ PYTHONPATH=src python3 -m miagent.cli generate-snmp \
 
 - **No sudo, no docker.** Can't run real RabbitMQ or containerized otelcol.
   Static binary downloads to `~/bin` or `./bin` work fine (network is open).
+- `bwrap` works here (unprivileged userns allowed), so generated exporters
+  run sandboxed; `MIAGENT_SANDBOX=off` to debug outside it.
 - `promtool` / `otelcol` not installed — harness skips promtool lint
   gracefully. Installing them (static binaries) is a welcome improvement.
 - Python 3.10 — no 3.11+ syntax. Installed: pydantic v2, httpx, requests,

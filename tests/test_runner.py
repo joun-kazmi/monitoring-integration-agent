@@ -227,3 +227,39 @@ def test_readiness_retries_through_503(tmp_path):
     code.write_text(SLOW_START)
     result = run_and_validate(code, SPEC, "http://x", port=_free_port(), settle_s=0)
     assert result.report.ok, result.report.summary() + result.process_log
+
+
+# --- bwrap sandbox ----------------------------------------------------------
+
+# Exposes 1 if the path given as --target is visible from inside the child.
+PEEKER = EXPORTER.replace(
+    '1 if "MIAGENT_TEST_SECRET" in os.environ else 0',
+    "1 if os.path.exists(a.target) else 0",
+)
+
+
+@pytest.mark.skipif(not runner._bwrap_works(), reason="bwrap/user namespaces unavailable")
+def test_sandbox_hides_home_and_tmp(tmp_path, monkeypatch):
+    monkeypatch.setattr(runner.settings, "sandbox", "bwrap")
+    work = tmp_path / "work"
+    work.mkdir()
+    code = work / "exporter.py"
+    code.write_text(PEEKER)
+    port = _free_port()
+    # This repo lives under a home dir both locally and on CI runners.
+    for secret in (ROOT / "README.md", tmp_path / "sibling-secret"):
+        secret.touch()
+        result = run_and_validate(code, SPEC, str(secret), port=port, settle_s=0)
+        assert result.report.ok, result.report.summary() + result.process_log
+        assert not result.report.warnings, f"{secret} visible in sandbox"
+    # Sanity: the same file IS visible when the sandbox is off.
+    monkeypatch.setattr(runner.settings, "sandbox", "off")
+    result = run_and_validate(code, SPEC, str(ROOT / "README.md"), port=port, settle_s=0)
+    assert result.report.warnings
+
+
+def test_sandbox_required_but_unavailable_raises(monkeypatch):
+    monkeypatch.setattr(runner.settings, "sandbox", "bwrap")
+    monkeypatch.setattr(runner, "_bwrap_ok", False)
+    with pytest.raises(RuntimeError):
+        runner.sandbox_prefix(Path("/tmp"))

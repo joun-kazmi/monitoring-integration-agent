@@ -4,11 +4,13 @@ Deterministic: static-check the file, launch it, wait for /metrics to come
 up, hand off to the validation harness, kill the process, and return the
 report plus captured logs for the repair stage.
 
-NOT a sandbox. The exporter is LLM-generated code and runs as the current
-user. Mitigations only: the child gets a scrubbed environment (no API keys
-or cloud credentials inherited), runs with the workdir as cwd, and is
-bounded by CPU-time and memory rlimits. A real isolation boundary
-(container or namespace sandbox) is roadmap work.
+The exporter is LLM-generated code. Every child gets a scrubbed
+environment (no API keys or cloud credentials inherited) and CPU-time /
+memory rlimits. When bubblewrap works (``MIAGENT_SANDBOX=auto|bwrap``), it
+also runs in a bwrap sandbox: filesystem read-only, home directories,
+/tmp and /run/user hidden (SSH keys, cloud creds, agent sockets), only its
+workdir writable, own PID/IPC/user namespaces, killed with the runner.
+The network is NOT restricted: it can reach anything the host can.
 """
 
 from __future__ import annotations
@@ -16,6 +18,8 @@ from __future__ import annotations
 import os
 import py_compile
 import resource
+import shutil
+import site
 import subprocess
 import sys
 import time
@@ -53,6 +57,68 @@ def scrubbed_env(extra: Optional[dict[str, str]] = None) -> dict[str, str]:
     env = {k: os.environ[k] for k in _ENV_ALLOWLIST if k in os.environ}
     env.update(extra or {})
     return env
+
+
+_bwrap_ok: Optional[bool] = None
+
+
+def _bwrap_works() -> bool:
+    """bwrap installed and unprivileged user namespaces allowed (cached)."""
+    global _bwrap_ok
+    if _bwrap_ok is None:
+        exe = shutil.which("bwrap")
+        _bwrap_ok = bool(exe) and subprocess.run(
+            [exe, "--ro-bind", "/", "/", "--unshare-all", "true"],
+            capture_output=True,
+        ).returncode == 0
+    return _bwrap_ok
+
+
+def _python_dirs_under(hidden: list[Path]) -> list[Path]:
+    """Interpreter/site-packages dirs the exporter needs that live under a
+    hidden tree (venv or ~/.local installs), to be re-exposed read-only."""
+    cands = [Path(sys.prefix), Path(sys.base_prefix), Path(site.getusersitepackages())]
+    cands += [Path(d) for d in site.getsitepackages()]
+    return sorted({
+        c for c in cands
+        if c.exists() and any(c.resolve().is_relative_to(h) for h in hidden)
+    })
+
+
+def sandbox_prefix(workdir: Path) -> list[str]:
+    """argv prefix that runs a command in a bwrap sandbox, or [] if off.
+
+    Raises RuntimeError when MIAGENT_SANDBOX=bwrap but bwrap can't run.
+    """
+    mode = settings.sandbox
+    if mode == "off":
+        return []
+    if not _bwrap_works():
+        if mode == "bwrap":
+            raise RuntimeError("MIAGENT_SANDBOX=bwrap but bubblewrap is unavailable "
+                               "or user namespaces are disabled")
+        print("[miagent] WARNING: bwrap unavailable; running generated code "
+              "UNSANDBOXED (set MIAGENT_SANDBOX=off to silence)", file=sys.stderr)
+        return []
+    home = Path(os.path.expanduser("~")).resolve()
+    hidden = [Path("/home"), Path("/tmp"), Path("/run/user")]
+    if not any(home.is_relative_to(h) for h in hidden):
+        hidden.append(home)  # e.g. /root
+    hidden = [h for h in hidden if h.exists()]
+    workdir = workdir.resolve()
+    args = ["bwrap", "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc"]
+    for h in hidden:
+        args += ["--tmpfs", str(h)]
+    for d in _python_dirs_under(hidden):
+        args += ["--ro-bind", str(d), str(d)]
+    args += [
+        "--bind", str(workdir), str(workdir),
+        "--chdir", str(workdir),
+        "--unshare-all", "--share-net",
+        "--die-with-parent", "--new-session",
+        "--",
+    ]
+    return args
 
 
 def _limit_resources() -> None:
@@ -144,8 +210,10 @@ def run_process_and_validate(
     future collector): the only things that differ per kind are the command
     and the metrics URL. Every child gets a scrubbed environment;
     ``untrusted=True`` (LLM-written code) additionally runs it from the log's
-    directory under rlimits.
+    directory under rlimits, inside the bwrap sandbox when available.
     """
+    if untrusted:
+        cmd = sandbox_prefix(log_path.parent) + cmd
     with open(log_path, "w") as log_file:
         proc = subprocess.Popen(
             cmd,
