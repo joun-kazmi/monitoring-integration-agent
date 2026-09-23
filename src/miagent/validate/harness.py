@@ -43,6 +43,33 @@ _INFRA_PREFIXES = (
 )
 
 
+def _cardinality_warnings(found: dict[str, object]) -> list[Failure]:
+    """Series-count budget per metric and in total (deterministic)."""
+    out: list[Failure] = []
+    total = 0
+    for metric_name, fam in found.items():
+        series = [s for s in fam.samples if s.name in (fam.name, fam.name + "_total")]
+        total += len(series)
+        if len(series) <= settings.max_series_per_metric:
+            continue
+        distinct: dict[str, set] = {}
+        for s in series:
+            for k, v in s.labels.items():
+                distinct.setdefault(k, set()).add(v)
+        worst = max(distinct.items(), key=lambda kv: len(kv[1]), default=None)
+        driver = f"; most distinct values: {worst[0]!r} ({len(worst[1])})" if worst else ""
+        out.append(Failure(
+            kind=FailureKind.high_cardinality, metric=metric_name, severity="warning",
+            detail=f"{len(series)} series > budget {settings.max_series_per_metric}{driver}",
+        ))
+    if total > settings.max_series_total:
+        out.append(Failure(
+            kind=FailureKind.high_cardinality, severity="warning",
+            detail=f"{total} series across all metrics > budget {settings.max_series_total}",
+        ))
+    return out
+
+
 def _promtool_lint(text: str) -> Optional[str]:
     """Run `promtool check metrics`; returns error output, None if clean,
     or None (skipped) when promtool isn't installed."""
@@ -200,6 +227,7 @@ def validate_text(text: str, spec: IntegrationSpec, scrape_url: str = "") -> Val
         return report
 
     expected_family_names = set()
+    found_families: dict[str, object] = {}
     for m in spec.metrics:
         outcome = MetricOutcome(
             name=m.name,
@@ -223,6 +251,7 @@ def validate_text(text: str, spec: IntegrationSpec, scrape_url: str = "") -> Val
             )
             continue
         expected_family_names.add(fam.name)
+        found_families[m.name] = fam
         report.metrics_found += 1
         before = len(failures)
         _check_metric(m, fam, failures, warnings, outcome=outcome)
@@ -241,6 +270,7 @@ def validate_text(text: str, spec: IntegrationSpec, scrape_url: str = "") -> Val
         if name not in expected_family_names
         and not name.startswith(_INFRA_PREFIXES)
     )
+    warnings.extend(_cardinality_warnings(found_families))
     report.failures = failures
     report.warnings = warnings
     report.ok = not failures

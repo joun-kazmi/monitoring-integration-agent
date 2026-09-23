@@ -6,7 +6,8 @@ it deterministically:
 
     python exporter.py --port PORT --target BASE_URL
 
-Basic-auth credentials come from MIAGENT_TARGET_USERNAME / MIAGENT_TARGET_PASSWORD.
+Credentials come from MIAGENT_TARGET_USERNAME / MIAGENT_TARGET_PASSWORD (basic)
+and MIAGENT_TARGET_TOKEN (bearer / header / query), per each endpoint's `auth`.
 """
 
 from __future__ import annotations
@@ -25,10 +26,16 @@ The exporter is a single Python file with this exact CLI contract:
   python exporter.py --port PORT --target BASE_URL
 
 Hard requirements:
-- Basic-auth credentials come ONLY from the environment variables
-  MIAGENT_TARGET_USERNAME and MIAGENT_TARGET_PASSWORD (use basic auth if
-  either is set). Do NOT add --username/--password flags: argv is visible
-  to other users on the host.
+- Credentials come ONLY from environment variables, never CLI flags (argv
+  is visible to other users on the host): MIAGENT_TARGET_USERNAME /
+  MIAGENT_TARGET_PASSWORD and MIAGENT_TARGET_TOKEN. Authenticate each
+  endpoint per its `auth` field in the metric schema:
+    basic  -> HTTP basic auth with username/password
+    bearer -> header `Authorization: Bearer <token>`
+    header -> header named exactly `auth_detail`, value = token
+    query  -> query parameter named exactly `auth_detail`, value = token
+    none   -> no auth, unless username/password are set (then basic)
+  Never log the token or full request URLs that contain it.
 - Python 3.10, only stdlib + `prometheus_client` + `httpx` (both installed).
   Do NOT import `requests` — it is not installed.
 - Implement a custom prometheus_client Collector class (registered on a

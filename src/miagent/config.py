@@ -45,6 +45,10 @@ class Settings(BaseSettings):
 
     # Validation harness
     scrape_timeout_s: float = 10.0
+    # Cardinality budget: exceeding either is a warning, not a failure (a big
+    # fleet legitimately has many series; the IR's labels are fixed).
+    max_series_per_metric: int = 1000
+    max_series_total: int = 10_000
     promtool_path: str = "promtool"
     otelcol_path: str = "otelcol"
     snmp_exporter_path: str = "./bin/snmp_exporter"

@@ -4,16 +4,22 @@ Serves /api/overview, /api/queues, /api/nodes with the real response shapes
 and HTTP basic auth (guest/guest), on port 15672 by default. Values drift a
 little between requests so counters actually increase.
 
-Usage: python3 mock_server.py [port] [--break]
+Usage: python3 mock_server.py [port] [--break] [--auth basic|bearer|header|query]
 
 With --break, the API simulates an upstream shape change (renamed and
 nested fields) to exercise the repair loop.
+
+--auth switches the required credential (default basic guest/guest). The
+token schemes all expect the token `s3cret-token`: `Authorization: Bearer`,
+header `X-Api-Key`, or query parameter `api_key`. (Real RabbitMQ is basic
+or OAuth2 bearer only; header/query exist to exercise the agent.)
 """
 
 import base64
 import json
 import sys
 import time
+from urllib.parse import parse_qs, urlsplit
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 START = time.time()
@@ -100,13 +106,26 @@ def nodes():
 
 ROUTES = {"/api/overview": overview, "/api/queues": queues, "/api/nodes": nodes}
 AUTH_OK = "Basic " + base64.b64encode(b"guest:guest").decode()
+TOKEN = "s3cret-token"
+AUTH_MODE = sys.argv[sys.argv.index("--auth") + 1] if "--auth" in sys.argv else "basic"
+
+
+def _authorized(handler) -> bool:
+    if AUTH_MODE == "bearer":
+        return handler.headers.get("Authorization") == f"Bearer {TOKEN}"
+    if AUTH_MODE == "header":
+        return handler.headers.get("X-Api-Key") == TOKEN
+    if AUTH_MODE == "query":
+        return parse_qs(urlsplit(handler.path).query).get("api_key") == [TOKEN]
+    return handler.headers.get("Authorization") == AUTH_OK
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.headers.get("Authorization") != AUTH_OK:
+        if not _authorized(self):
             self.send_response(401)
-            self.send_header("WWW-Authenticate", 'Basic realm="RabbitMQ Management"')
+            if AUTH_MODE == "basic":
+                self.send_header("WWW-Authenticate", 'Basic realm="RabbitMQ Management"')
             self.end_headers()
             self.wfile.write(b"Not authorised")
             return
@@ -128,6 +147,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 15672
-    print(f"mock rabbitmq management api on :{port}")
+    port = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 15672
+    print(f"mock rabbitmq management api on :{port} (auth={AUTH_MODE})")
     HTTPServer(("127.0.0.1", port), Handler).serve_forever()

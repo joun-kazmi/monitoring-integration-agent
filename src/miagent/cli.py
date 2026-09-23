@@ -22,6 +22,9 @@ def _add_target_auth_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--password", default=os.environ.get("MIAGENT_TARGET_PASSWORD", ""),
                    help="target basic-auth password (default $MIAGENT_TARGET_PASSWORD; "
                         "prefer the env var — argv is visible in ps)")
+    p.add_argument("--token", default=os.environ.get("MIAGENT_TARGET_TOKEN", ""),
+                   help="target API token for bearer/header/query auth "
+                        "(default $MIAGENT_TARGET_TOKEN; prefer the env var)")
     p.add_argument("--live-samples", default="redacted", choices=["redacted", "raw", "off"],
                    help="what repair may send to the LLM from live target responses: "
                         "redacted (default; hosts/IPs/emails/tokens masked), raw, or off")
@@ -65,6 +68,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         port=args.port,
         username=args.username,
         password=args.password,
+        token=args.token,
         live_samples=args.live_samples,
     )
     print(f"\n{'SUCCESS' if result.ok else 'FAILED'} in {result.elapsed_s:.0f}s, "
@@ -143,6 +147,7 @@ def _cmd_repair(args: argparse.Namespace) -> int:
         port=args.port,
         username=args.username,
         password=args.password,
+        token=args.token,
         live_samples=args.live_samples,
     )
     print(f"\n{'SUCCESS' if result.ok else 'FAILED'} in {result.elapsed_s:.0f}s, "

@@ -24,6 +24,7 @@ class FailureKind(str, Enum):
     missing_label = "missing_label"
     label_value_invalid = "label_value_invalid"
     value_implausible = "value_implausible"
+    high_cardinality = "high_cardinality"  # warning: series count over budget
 
 
 class Failure(BaseModel):

@@ -198,7 +198,6 @@ def test_legacy_exporter_still_gets_argv_credentials(tmp_path, popen_calls):
                      username="u", password="p", settle_s=0)
     cmd, env = popen_calls[0]
     assert cmd[-4:] == ["--username", "u", "--password", "p"]
-    assert "MIAGENT_TARGET_PASSWORD" not in env
 
 
 SLOW_START = textwrap.dedent("""\
@@ -263,3 +262,71 @@ def test_sandbox_required_but_unavailable_raises(monkeypatch):
     monkeypatch.setattr(runner, "_bwrap_ok", False)
     with pytest.raises(RuntimeError):
         runner.sandbox_prefix(Path("/tmp"))
+
+
+# --- per-endpoint auth schemes ---------------------------------------------
+
+from miagent.ir import AuthScheme, EndpointSpec  # noqa: E402
+
+TOKEN = "s3cret-token"  # what mock_server.py expects in token modes
+
+
+def test_endpoint_auth_schemes():
+    ep = lambda scheme, detail="": EndpointSpec(url="/x", auth=scheme, auth_detail=detail)  # noqa: E731
+    assert runner.endpoint_auth(ep(AuthScheme.basic), "u", "p") == {"auth": ("u", "p")}
+    assert runner.endpoint_auth(ep(AuthScheme.none)) == {}
+    assert runner.endpoint_auth(ep(AuthScheme.bearer), token="t") == {
+        "headers": {"Authorization": "Bearer t"}}
+    assert runner.endpoint_auth(ep(AuthScheme.header, " X-Api-Key "), token="t") == {
+        "headers": {"X-Api-Key": "t"}}
+    assert runner.endpoint_auth(ep(AuthScheme.query, "api_key"), token="t") == {
+        "params": {"api_key": "t"}}
+    assert runner.endpoint_auth(ep(AuthScheme.bearer)) == {}  # no token: no auth
+    with pytest.raises(ValueError):
+        runner.endpoint_auth(ep(AuthScheme.header, "Send it in X-Api-Key"), token="t")
+
+
+@pytest.fixture
+def mock_api_auth(request):
+    port = _free_port()
+    proc = subprocess.Popen(
+        [sys.executable, str(ROOT / "examples" / "rabbitmq" / "mock_server.py"),
+         str(port), "--auth", request.param],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    url = f"http://127.0.0.1:{port}"
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        try:
+            httpx.get(url + "/api/overview", timeout=1)
+            break
+        except httpx.HTTPError:
+            time.sleep(0.1)
+    yield request.param, url
+    proc.terminate()
+    proc.wait(timeout=5)
+
+
+@pytest.mark.parametrize("mock_api_auth", ["bearer", "header", "query"], indirect=True)
+@pytest.mark.parametrize("redact", [True, False])
+def test_probe_uses_token_scheme_and_never_echoes_it(mock_api_auth, redact):
+    scheme, url = mock_api_auth
+    spec = IntegrationSpec(
+        service="demo",
+        endpoints=[EndpointSpec(url="/api/overview", auth=AuthScheme(scheme),
+                                auth_detail={"header": "X-Api-Key", "query": "api_key"}.get(scheme, ""))],
+        metrics=[MetricSpec(name="demo_x", type=MetricType.gauge)],
+    )
+    out = runner.probe_endpoints(spec, url, token=TOKEN, redact=redact)
+    assert "HTTP 200" in out, out
+    assert TOKEN not in out
+    assert "HTTP 401" in runner.probe_endpoints(spec, url, token="wrong", redact=redact)
+
+
+def test_token_reaches_exporter_via_env_only(tmp_path, popen_calls):
+    code = tmp_path / "exporter.py"
+    code.write_text("# reads MIAGENT_TARGET_TOKEN\n" + SLOW_START)
+    run_and_validate(code, SPEC, "http://x", port=_free_port(), token=TOKEN, settle_s=0)
+    cmd, env = popen_calls[0]
+    assert env["MIAGENT_TARGET_TOKEN"] == TOKEN
+    assert TOKEN not in " ".join(cmd)

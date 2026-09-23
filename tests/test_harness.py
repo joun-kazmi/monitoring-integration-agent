@@ -142,3 +142,40 @@ def test_metric_outcome_flags_label_mismatch():
     report = validate_text(text, SPEC)
     outcome = next(m for m in report.metrics if m.name == "demo_requests_total")
     assert outcome.status == "label_mismatch"
+
+
+# --- cardinality budget ----------------------------------------------------
+
+def _gauge_series(n: int) -> str:
+    lines = ["# TYPE demo_queue_depth gauge"]
+    lines += [f'demo_queue_depth{{queue="q{i}",vhost="/"}} 1' for i in range(n)]
+    return "\n".join(lines) + "\n"
+
+
+def _depth_only_spec():
+    return IntegrationSpec(service="demo", metrics=[
+        MetricSpec(name="demo_queue_depth", type=MetricType.gauge),
+    ])
+
+
+def test_cardinality_over_budget_warns_but_passes(monkeypatch):
+    from miagent.config import settings
+    monkeypatch.setattr(settings, "max_series_per_metric", 3)
+    report = validate_text(_gauge_series(5), _depth_only_spec())
+    assert report.ok
+    [w] = [w for w in report.warnings if w.kind == FailureKind.high_cardinality]
+    assert w.metric == "demo_queue_depth"
+    assert "5 series" in w.detail and "'queue' (5)" in w.detail
+
+
+def test_cardinality_total_budget(monkeypatch):
+    from miagent.config import settings
+    monkeypatch.setattr(settings, "max_series_total", 4)
+    report = validate_text(_gauge_series(5), _depth_only_spec())
+    assert any(w.kind == FailureKind.high_cardinality and not w.metric
+               for w in report.warnings)
+
+
+def test_cardinality_within_budget_is_silent():
+    report = validate_text(_gauge_series(5), _depth_only_spec())
+    assert not [w for w in report.warnings if w.kind == FailureKind.high_cardinality]

@@ -62,6 +62,7 @@ def validate_and_repair(
     port: int = 9464,
     username: str = "",
     password: str = "",
+    token: str = "",
     live_samples: str = "redacted",
 ) -> tuple[Optional[ValidationReport], int]:
     """Run/validate the artifact; on failure, repair with escalation until
@@ -72,7 +73,8 @@ def validate_and_repair(
     while iteration <= settings.max_repair_iterations:
         _log(f"stage 5: run + validate (iteration {iteration})")
         result = run_and_validate(
-            code_path, spec, target, port=port, username=username, password=password
+            code_path, spec, target, port=port, username=username, password=password,
+            token=token,
         )
         report = result.report
         (workdir / f"report_{iteration}.json").write_text(report.model_dump_json(indent=2))
@@ -90,12 +92,16 @@ def validate_and_repair(
             ""
             if live_samples == "off"
             else probe_endpoints(
-                spec, target, username=username, password=password,
+                spec, target, username=username, password=password, token=token,
                 redact=live_samples != "raw",
             )
         )
+        process_log = result.process_log
+        for secret in (password, token):
+            if secret:
+                process_log = process_log.replace(secret, "<credential>")
         code = repair_python_exporter(
-            router, spec, code, report, result.process_log, iteration - 1,
+            router, spec, code, report, process_log, iteration - 1,
             endpoint_samples=samples,
         )
         code_path.write_text(code)
@@ -111,6 +117,7 @@ def run_pipeline(
     port: int = 9464,
     username: str = "",
     password: str = "",
+    token: str = "",
     router: Optional[LLMRouter] = None,
     live_samples: str = "redacted",
 ) -> PipelineResult:
@@ -146,7 +153,7 @@ def run_pipeline(
 
     report, iterations = validate_and_repair(
         router, spec, code_path, target, workdir,
-        port=port, username=username, password=password,
+        port=port, username=username, password=password, token=token,
         live_samples=live_samples,
     )
 
@@ -284,6 +291,7 @@ def run_repair(
     port: int = 9464,
     username: str = "",
     password: str = "",
+    token: str = "",
     router: Optional[LLMRouter] = None,
     live_samples: str = "redacted",
 ) -> PipelineResult:
@@ -304,7 +312,7 @@ def run_repair(
 
     report, iterations = validate_and_repair(
         router, spec, work_path, target, workdir,
-        port=port, username=username, password=password,
+        port=port, username=username, password=password, token=token,
         live_samples=live_samples,
     )
 

@@ -87,7 +87,12 @@ class EndpointSpec(BaseModel):
     url: str
     method: str = "GET"
     auth: AuthScheme = AuthScheme.none
-    auth_detail: str = ""  # header/param name when auth is header/query
+    auth_detail: str = Field(
+        default="",
+        description="For auth=header: the exact header name (e.g. X-Api-Key). "
+        "For auth=query: the exact query-parameter name (e.g. api_key). "
+        "Only the bare name, no prose. Empty for other schemes.",
+    )
     response_format: str = "json"  # json | prometheus | xml | snmp
     notes: str = ""
 

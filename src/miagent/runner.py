@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 import py_compile
+import re
 import resource
 import shutil
 import site
@@ -30,7 +31,7 @@ from typing import Optional
 import httpx
 
 from miagent.config import settings
-from miagent.ir import IntegrationSpec
+from miagent.ir import AuthScheme, EndpointSpec, IntegrationSpec
 from miagent.redact import redact_body, redact_text
 from miagent.validate.harness import validate_scrape
 from miagent.validate.report import Failure, FailureKind, ValidationReport
@@ -51,6 +52,31 @@ _RLIMIT_AS_BYTES = 1024 * 1024 * 1024  # 1 GiB address space
 # visible to every user via ps / /proc).
 ENV_TARGET_USERNAME = "MIAGENT_TARGET_USERNAME"
 ENV_TARGET_PASSWORD = "MIAGENT_TARGET_PASSWORD"
+ENV_TARGET_TOKEN = "MIAGENT_TARGET_TOKEN"  # bearer / header / query schemes
+
+_HEADER_NAME_RE = re.compile(r"^[A-Za-z0-9!#$%&'*+.^_`|~-]+$")
+
+
+def endpoint_auth(ep: EndpointSpec, username: str = "", password: str = "",
+                  token: str = "") -> dict:
+    """httpx request kwargs implementing ``ep.auth`` (deterministic).
+
+    Raises ValueError when a header/query scheme lacks a usable name.
+    """
+    scheme = ep.auth
+    if scheme in (AuthScheme.basic, AuthScheme.none):
+        return {"auth": (username, password)} if username or password else {}
+    if not token:
+        return {}
+    if scheme is AuthScheme.bearer:
+        return {"headers": {"Authorization": f"Bearer {token}"}}
+    name = ep.auth_detail.strip()
+    if not _HEADER_NAME_RE.match(name):
+        raise ValueError(f"auth={scheme.value} needs a bare header/param name in "
+                         f"auth_detail, got {ep.auth_detail!r}")
+    if scheme is AuthScheme.header:
+        return {"headers": {name: token}}
+    return {"params": {name: token}}
 
 
 def scrubbed_env(extra: Optional[dict[str, str]] = None) -> dict[str, str]:
@@ -140,6 +166,7 @@ def probe_endpoints(
     password: str = "",
     max_bytes: int = 3000,
     redact: bool = True,
+    token: str = "",
 ) -> str:
     """Fetch a fresh sample of each upstream endpoint (deterministic).
 
@@ -149,17 +176,23 @@ def probe_endpoints(
     prompt, so by default it is redacted (see ``miagent.redact``) and labeled
     by path only, never the target's host.
     """
-    auth = (username, password) if username or password else None
-    clean = redact_text if redact else (lambda t: t)
+    secrets = [s for s in (password, token) if s]
+
+    def clean(text: str) -> str:
+        for secret in secrets:  # never echo credentials, even in raw mode
+            text = text.replace(secret, "<credential>")
+        return redact_text(text) if redact else text
+
     chunks = []
     for ep in spec.endpoints:
         url = ep.url if ep.url.startswith("http") else target.rstrip("/") + "/" + ep.url.lstrip("/")
         label = httpx.URL(url).raw_path.decode() if redact else url
         try:
-            r = httpx.get(url, auth=auth, timeout=settings.scrape_timeout_s)
+            kwargs = endpoint_auth(ep, username, password, token)
+            r = httpx.get(url, timeout=settings.scrape_timeout_s, **kwargs)
             body = redact_body(r.text) if redact else r.text
-            chunks.append(f"### GET {label} -> HTTP {r.status_code}\n{body[:max_bytes]}")
-        except httpx.HTTPError as e:
+            chunks.append(f"### GET {label} -> HTTP {r.status_code}\n{clean(body)[:max_bytes]}")
+        except (httpx.HTTPError, ValueError) as e:
             chunks.append(f"### GET {label} -> {type(e).__name__}: {clean(str(e))}")
     return "\n\n".join(chunks)
 
@@ -254,6 +287,7 @@ def run_and_validate(
     username: str = "",
     password: str = "",
     settle_s: float = 1.0,
+    token: str = "",
 ) -> RunResult:
     log_path = code_path.with_suffix(".log")
 
@@ -269,13 +303,10 @@ def run_and_validate(
         )
 
     cmd = [sys.executable, str(code_path.resolve()), "--port", str(port), "--target", target]
-    extra_env = {}
-    if ENV_TARGET_PASSWORD in code_path.read_text():
-        if username:
-            extra_env[ENV_TARGET_USERNAME] = username
-        if password:
-            extra_env[ENV_TARGET_PASSWORD] = password
-    else:
+    creds = {ENV_TARGET_USERNAME: username, ENV_TARGET_PASSWORD: password,
+             ENV_TARGET_TOKEN: token}
+    extra_env = {k: v for k, v in creds.items() if v}
+    if "MIAGENT_TARGET_" not in code_path.read_text():
         # Legacy contract (pre env-credentials): credentials as argv.
         if username:
             cmd += ["--username", username]

@@ -201,16 +201,21 @@ proven. The rest deserves an honest accounting:
   faced a service whose docs and response shapes I didn't choose. Doc
   *ingestion* has been exercised on genuinely foreign input: the live Swagger
   Petstore spec and rabbitmq.com's HTML reference.
-- **Auth beyond HTTP basic is a real gap.** The IR can express bearer, header
-  and query schemes, but the runner only supplies basic-auth credentials, so a
-  token-authed API fails with no repair path. This is the next thing worth
-  fixing.
+- **Auth: basic, bearer, API-key header and query-param tokens.** Each
+  endpoint's IR `auth` scheme is honored by both the generated exporter and
+  the repair-stage probe; the token comes from `MIAGENT_TARGET_TOKEN`. Not
+  covered: OAuth2 flows (token acquisition/refresh), mTLS, request signing
+  (AWS SigV4 and friends), and cookie/session login.
 - **No pagination handling.** One GET per endpoint. A paginated collection
   would silently yield page 1 — and validation would *pass*, because the
   metrics do exist. A green check on degraded output is the failure mode this
   design has to keep watching for.
-- **No cardinality guard.** Three mock queues are fine; 50,000 real ones would
-  emit 50,000 series unremarked.
+- **Cardinality is flagged, not prevented.** Validation warns when one metric
+  exceeds `MIAGENT_MAX_SERIES_PER_METRIC` (1000) series or all metrics together
+  exceed `MIAGENT_MAX_SERIES_TOTAL` (10000), naming the label with the most
+  distinct values. It's a warning because the IR's labels are the contract:
+  trimming them is a schema decision for a human, not something repair should
+  do to get a green check.
 - **SNMP v2c only**, one module per run.
 - **Generated code is sandboxed for files, not for network.** The REST path
   runs LLM-written Python with a scrubbed environment (no API keys or cloud
