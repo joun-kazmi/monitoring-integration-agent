@@ -1,7 +1,7 @@
 [project]
 name = "monitoring-integration-agent"
 version = "0.1.0"
-description = "An agent that writes Prometheus exporters and snmp_exporter configs from API docs and MIBs, then proves they work by running them."
+description = "Monitoring integrations that verify themselves: an AI agent that builds Prometheus/SNMP integrations, then proves they work."
 requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.5",

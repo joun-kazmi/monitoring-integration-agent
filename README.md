@@ -4,8 +4,9 @@
 
 **An AI agent that builds monitoring integrations — then proves they actually
 work.** Point it at an API's documentation or a network device's MIB. It writes
-the integration, runs it against the real system, and checks every metric
-against a spec. No manual testing, and no AI grading its own homework.
+the integration, runs it against the target, and checks every metric against
+a spec — without relying on manual spot-checking or AI grading its own
+homework.
 
 [![tests](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/joun-kazmi/monitoring-integration-agent/actions/workflows/tests.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -36,18 +37,20 @@ is right. This project closes that gap:
 - **Checking is free.** Validation spends zero AI tokens, so a whole catalog of
   integrations can be re-verified on a schedule, and AI is only paid for when
   something actually broke.
-- **It's careful with what it runs.** AI-written code never sees your API
-  keys, runs sandboxed away from your home directory (on Linux, via
-  bubblewrap), and live data sent to the model is redacted first.
+- **It limits what generated code can access.** AI-written exporters run with
+  a scrubbed environment that excludes unrelated API keys and cloud
+  credentials, with filesystem isolation and resource limits on Linux. Target
+  credentials are scoped to the integration being tested, and live data sent
+  to the model is redacted by default.
 
 **By the numbers**
 
-- **28/28** metrics verified on the first try for a RabbitMQ integration, in 3
-  model calls and under 2 minutes
+- **28/28** metrics verified on the first generation of a RabbitMQ
+  integration, in just 3 model calls
 - **1** model call to recover from a breaking upstream API change
 - **1** model call for an entire network-device (SNMP) integration
 - **0** tokens spent on validation, on every run
-- **80+** automated tests in CI, running inside the same sandbox as generated code
+- **80+** automated tests in CI, with the generated-code sandbox enforced
 
 **Engineering highlights**
 
@@ -230,7 +233,7 @@ Other commands: `generate-snmp` (MIB → validated `snmp_exporter` config),
 an IR spec).
 
 ```bash
-PYTHONPATH=src python3 -m pytest tests/ -q    # 53 tests
+PYTHONPATH=src python3 -m pytest tests/ -q
 ```
 
 ## Run reports
